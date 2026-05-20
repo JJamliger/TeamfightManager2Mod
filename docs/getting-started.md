@@ -68,6 +68,23 @@ For champion names and skill descriptions, add:
 mods/my_mod/text/champion.i18n
 ```
 
+Most champion UI reads names and descriptions from the base champion text table, so also merge your text file into `asset/base/text/champion` with `mod.override_info`:
+
+```text
+mods/my_mod/mod.override_info
+```
+
+```json
+{
+  "asset/base/text/champion": {
+    "path": "asset/my_mod/text/champion",
+    "type": "merge"
+  }
+}
+```
+
+This lets keys such as `description.my_champion.name` work in champion lists, ban/pick screens, tooltips, and skill descriptions. See [Asset Overrides and i18n](asset-overrides-and-i18n.md) for the full text merge guide.
+
 For icons or sprites, add PNG or Aseprite files anywhere under your mod folder and reference them with `asset/my_mod/...`. If you are making an animated sprite or a packed icon sheet, read [Assets and Sprite Sheets](assets-and-sprite-sheets.md) before naming the files.
 
 If you want to inspect the packaged base-game files, run `TFM2ModUploader.exe` and use **Unpack Base Bundle**. It reads the local `bundle.game_data` file next to the uploader and writes a reference copy to `mods/base_unpacked`. See [Workshop Upload](workshop-upload.md#viewing-base-game-data) for details.

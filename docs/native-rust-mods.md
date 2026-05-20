@@ -509,26 +509,67 @@ The data is namespaced by mod id and saved with the game database. Multiplayer l
 
 ## Building With the Mod SDK
 
-The SDK contains the prebuilt `mod-api` files and a build script:
+The SDK contains the prebuilt `mod-api` files and build helpers:
 
 ```text
 mod-sdk/
   deps/
   native/
   build_mod.bat
+  build_mod_cargo.ps1
   rust-toolchain.toml
   toolchain_version.txt
   template/
+    Cargo.toml
+    src/lib.rs
 ```
 
-For manual builds:
+For simple one-file mods, a folder with only `src/lib.rs` still works. The SDK calls `rustc` directly and injects the matching `mod_api` crate:
 
 ```bat
 cd mod-sdk
 build_mod.bat path\to\your_mod\src\lib.rs
 ```
 
-Put the new DLL in your mod folder before launching the game.
+For mods that need external Rust crates, use a normal Cargo project in the mod folder:
+
+```text
+my_mod/
+  mod.mod_info
+  Cargo.toml
+  src/
+    lib.rs
+  preview.png
+```
+
+Example `Cargo.toml`:
+
+```toml
+[package]
+name = "my_mod"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+rand = "0.8"
+serde_json = "1.0"
+```
+
+Do not add `mod-api` to `[dependencies]` in the public SDK workflow. The uploader and SDK build script inject the matching prebuilt `mod_api` crate automatically so the DLL matches the game SDK.
+
+Manual Cargo build through the SDK:
+
+```bat
+cd mod-sdk
+build_mod.bat path\to\your_mod
+```
+
+The build copies the produced DLL back to the mod folder as `my_mod.dll`, using the mod folder name. Keep the folder name and the `ModRegistration::new("my_mod")` id aligned.
+
+If you develop inside another Cargo workspace and Cargo says the package is unexpectedly inside a workspace, add an empty `[workspace]` table to the mod's `Cargo.toml` or move the mod folder outside that workspace.
 
 ## Uploading Native Rust Mods
 
@@ -545,25 +586,21 @@ mod-sdk/
   deps/
   native/
   build_mod.bat
+  build_mod_cargo.ps1
   rust-toolchain.toml
 ```
 
-Your mod folder should keep the Rust source under `src/`:
+The uploader checks the selected mod folder in this order:
 
-```text
-my_mod/
-  mod.mod_info
-  src/
-    lib.rs
-  preview.png
-```
+1. If `Cargo.toml` exists, it builds with Cargo. This supports external crates from crates.io or other normal Cargo dependency sources.
+2. If there is no `Cargo.toml` but `src/lib.rs` exists, it uses the older direct `rustc` build.
+3. If neither exists, no native build step is shown.
 
-When **Build native Rust code before uploading** is checked, the uploader uses the SDK's `mod-api` files to build the DLL first. It then uploads the compiled DLL and the rest of the mod assets. The `src/` folder is skipped during upload, so your Rust source code is not sent to Workshop.
+When **Build native Rust code before uploading** is checked, the uploader uses the SDK's `mod-api` files to build the DLL first. It then uploads the compiled DLL and the rest of the runtime mod assets. Build-only files and source folders such as `src/`, `target/`, `Cargo.toml`, and `Cargo.lock` are skipped during upload, so your Rust source code is not sent to Workshop.
 
 If you already built the DLL yourself, leave the DLL in the mod folder and uncheck the build option before uploading.
 
 The SDK and game version should match. After a game update that changes the SDK, rebuild the DLL and upload a new Workshop update.
-
 ## Common Native Load Problems
 
 - The DLL is missing from the mod folder.

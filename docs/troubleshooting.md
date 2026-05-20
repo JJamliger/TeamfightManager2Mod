@@ -176,6 +176,9 @@ Check:
 
 - The matching Mod SDK is next to `TFM2ModUploader.exe`.
 - `mod-sdk/deps` contains the prebuilt `mod-api` files.
-- Rust is installed and `rustc` can run.
-- The mod source is at `src/lib.rs`.
+- Rust is installed and both `cargo` and `rustc` can run.
+- The mod has either `Cargo.toml` or `src/lib.rs`.
+- If using external crates, Cargo can download them or they already exist in your Cargo cache.
+- If the mod is inside another Cargo workspace, add an empty `[workspace]` table to the mod's `Cargo.toml` or move it outside that workspace.
+- Do not add `mod-api` to `[dependencies]` for the public SDK build path; the uploader injects the matching prebuilt `mod_api` crate.
 - The SDK version matches the game version you are targeting.

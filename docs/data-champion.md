@@ -261,12 +261,14 @@ Data champions can use these effect types:
 
 - Damage and healing: `Attack`, `ApAttack`, `FixedAttack`, `Heal`, `Shield`.
 - Crowd control: `Stun`, `Airborne`, `Knockback`, `Grab`, `Pull`, `Fear`, `Charm`, `Bind`, `Taunt`, `BlockAttack`, `BlockSkill`, `BlockMoveSkill`, `Invisible`, `Banish`.
-- Movement: `Rush`, `RushTime`, `Teleport`, `DirTeleport`, `MoveBack`.
-- Projectiles: `LinearProjectile`, `TargetProjectile`, `TargetSplashProjectile`, `AutoTargetProjectile`, `RangeProjectile`, `ParabolicProjectile`.
-- Area: `RangeEffect`.
-- Buffs: `AddBuff`, `AddCasterBuff`.
-- Composition: `Combine`, `Delayed`, `WithSelf`, `RandomTarget`.
-- Visual/audio triggers: `ViewEffect`, `CasterViewEffect`, `CasterAnimation`, `Sfx`.
+- Movement: `Rush`, `RushTime`, `Teleport`, `DirTeleport`, `MoveBack`, `MoveTo`, `MoveToTarget`, `RushMoveToBack`.
+- Projectiles: `LinearProjectile`, `TargetProjectile`, `TargetSplashProjectile`, `AutoTargetProjectile`, `RangeProjectile`, `ParabolicProjectile`, `BackToCasterLinearProjectile`, `TargetProjectileFromProjectile`, `LineRangeProjectile`, `RangePeriodProjectile`, `ApplyInProjectile`.
+- Area and barriers: `RangeEffect`, `ShrinkingBarrier`.
+- Buffs and casted effects: `AddBuff`, `AddCasterBuff`, `RemoveCasterBuff`, `AddCasted`.
+- Composition and branching: `Combine`, `Delayed`, `WithSelf`, `RandomTarget`, `SwitchByBuff`, `SwitchByLevel3`.
+- Visual/audio triggers: `ViewEffect`, `CasterViewEffect`, `CasterAnimation`, `RemoveCasterAnimation`, `Sfx`, `TargetSfx`.
+
+This page only summarizes the common groups. For exact fields and nested examples for every effect type, use [Effect Schema](data-champion-schema/effects.md).
 
 ## Shapes
 

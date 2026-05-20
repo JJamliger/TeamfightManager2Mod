@@ -176,19 +176,26 @@ The uploader detects `database_pack.info`, shows the package type as **Database 
 
 Most mods do not need the Mod SDK. JSON, image, Aseprite, text, UI, and data-only champion mods can be uploaded with `TFM2ModUploader.exe` alone.
 
-Native Rust mods are different. If your mod folder contains:
+Native Rust mods are different. The uploader treats a mod as a code mod when the selected folder contains either:
+
+```text
+Cargo.toml
+```
+
+or:
 
 ```text
 src/lib.rs
 ```
 
-the uploader treats it as a code mod. If **Build native Rust code before uploading** is checked, it tries to build the DLL before uploading.
+If **Build native Rust code before uploading** is checked, it tries to build the DLL before uploading.
 
 For that build step, you need:
 
 - the matching Teamfight Manager 2 Mod SDK
-- a working Rust toolchain
+- a working Rust toolchain with `cargo` and `rustc`
 - the SDK folder placed next to `TFM2ModUploader.exe`
+- internet access or a populated Cargo cache if your Cargo mod depends on crates.io packages
 
 Recommended layout:
 
@@ -201,13 +208,35 @@ mod-sdk/
   deps/
   native/
   build_mod.bat
+  build_mod_cargo.ps1
   rust-toolchain.toml
 ```
 
-When the SDK is present, the uploader uses the SDK's prebuilt `mod-api` files to build your mod DLL, then uploads the finished mod folder. If you already built the DLL yourself, you can uncheck the build option and upload the existing files.
+Build behavior:
+
+- `Cargo.toml` present: the uploader runs a Cargo release build, injects the SDK's prebuilt `mod_api` crate, and supports external crates from normal Cargo dependency sources.
+- Only `src/lib.rs` present: the uploader uses the older direct `rustc` build with only `mod_api` and `std`.
+
+For Cargo mods, use a normal library crate:
+
+```toml
+[package]
+name = "my_mod"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+rand = "0.8"
+```
+
+Do not add `mod-api` to `[dependencies]` in the public SDK workflow. The uploader injects the matching SDK build automatically.
+
+When the SDK is present, the uploader builds your mod DLL into the selected mod folder, then uploads the finished runtime files. It skips build-only/source paths such as `src/`, `target/`, `Cargo.toml`, and `Cargo.lock`. If you already built the DLL yourself, you can uncheck the build option and upload the existing files.
 
 The SDK should match the game version you are targeting. Rebuild native mods after game updates when a new SDK is released.
-
 ## Managing Workshop Items
 
 Use one local package folder as the source of truth for each Workshop item.
