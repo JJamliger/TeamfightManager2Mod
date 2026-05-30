@@ -1,10 +1,10 @@
-# Visual Bindings
+# 시각 결속
 
-Data champion effects refer to visuals by `name`. `view_effects`, `view_projectiles`, and `view_buffs` register those names for the game view.
+데이터 챔피언 효과는 `name`으로 시각 요소를 참조합니다. `view_effects`, `view_projectiles`, `view_buffs`는 게임 화면용으로 그 이름들을 등록합니다.
 
-## Effect Visuals
+## 효과 시각 요소
 
-Used by `ViewEffect` and `CasterViewEffect`.
+`ViewEffect`와 `CasterViewEffect`에서 사용됩니다.
 
 ### `Animation`
 
@@ -32,17 +32,17 @@ Used by `ViewEffect` and `CasterViewEffect`.
 }
 ```
 
-Fields:
+항목:
 
-- `name`: effect name used by `ViewEffect` or `CasterViewEffect`.
-- `anim`: animation asset base path.
-- `tag`: animation tag inside `anim#anim`.
-- `z`: render depth offset, default `0`.
-- `is_follow`: whether the animation follows its target, default `false`. The current loop registration ignores this flag internally, but keep it explicit for readability.
+- `name`: `ViewEffect` 또는 `CasterViewEffect`에서 사용하는 효과 이름입니다.
+- `anim`: 동작 자산 기본 경로입니다.
+- `tag`: `anim#anim` 내부의 동작 태그입니다.
+- `z`: 렌더링 깊이 오프셋이며, 기본값은 `0`입니다.
+- `is_follow`: 동작이 대상을 따라가는지 여부이며, 기본값은 `false`입니다. 현재 반복 등록은 내부적으로 이 깃발을 무시하지만, 가독성을 위해 명시해 두십시오.
 
-## Projectile Visuals
+## 투사체 시각 요소
 
-Used by projectile effects whose `name` matches the binding.
+`name`이 결속과 일치하는 투사체 효과에서 사용됩니다.
 
 ### `Animated`
 
@@ -81,9 +81,9 @@ Used by projectile effects whose `name` matches the binding.
 }
 ```
 
-## Buff Visuals
+## 버프 시각 요소
 
-Used when a buff with the same `name` is active.
+같은 `name`을 가진 버프가 활성화되어 있을 때 사용됩니다.
 
 ### `Animated`
 
@@ -111,9 +111,9 @@ Used when a buff with the same `name` is active.
 }
 ```
 
-## Name Matching
+## 이름 일치
 
-Names must match exactly:
+이름은 반드시 정확히 일치해야 합니다:
 
 ```json
 {
@@ -124,7 +124,7 @@ Names must match exactly:
 }
 ```
 
-Projectile names work the same way:
+투사체 이름도 같은 방식으로 작동합니다:
 
 ```json
 {

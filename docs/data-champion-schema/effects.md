@@ -1,14 +1,14 @@
-# Effects
+# 효과
 
-`effect` fields use `DataEffectDef`. Every effect object has a `type` string. This page documents the effect types currently accepted by `.data_champion` JSON.
+`effect` 필드는 `DataEffectDef`를 사용합니다. 모든 효과 객체에는 `type` 문자열이 있습니다. 이 페이지는 현재 `.data_champion` JSON에서 허용되는 효과 유형을 설명합니다.
 
-The game engine contains more native `EffectType` implementations than this page exposes. Data-only champions can use only the `DataEffectDef` variants listed here unless the game code adds another JSON mapping. See [Engine Effects Not Exposed To Data](#engine-effects-not-exposed-to-data) near the end for the remaining internal-only categories.
+게임 엔진에는 이 페이지에 공개된 것보다 더 많은 기본 `EffectType` 구현이 포함되어 있습니다. 데이터 전용 챔피언은 게임 코드에서 다른 JSON 매핑을 추가하지 않는 한 여기 나열된 `DataEffectDef` 변형만 사용할 수 있습니다. 나머지 내부 전용 범주는 끝부분 근처의 [데이터에 노출되지 않은 엔진 효과](#engine-effects-not-exposed-to-data)를 참고하십시오.
 
-## Common Rules
+## 공통 규칙
 
-Time values such as `tick`, `duration`, `delay`, `apply`, `period`, and `travel_time` are simulation ticks.
+`tick`, `duration`, `delay`, `apply`, `period`, `travel_time` 등의 시간 값은 시뮬레이션 틱입니다.
 
-Most projectile and movement effects can contain nested effects. `applied_effects` entries are objects with an `effect` and an optional `casting_type`:
+대부분의 투사체 및 이동 효과에는 중첩 효과를 포함할 수 있습니다. `applied_effects` 항목은 `effect`와 선택적 `casting_type`을 갖는 객체입니다:
 
 ```json
 {
@@ -17,30 +17,30 @@ Most projectile and movement effects can contain nested effects. `applied_effect
 }
 ```
 
-`casting_type` defaults to `Targeting`.
+`casting_type`의 기본값은 `Targeting`입니다.
 
-`end_effects` is usually a list of raw effect objects. `RangePeriodProjectile.end_effects` is the exception: it uses the same `{ "effect", "casting_type" }` entry format as `applied_effects` because the periodic area can apply end effects to targets inside the area.
+`end_effects`는 보통 원시 효과 객체 목록입니다. `RangePeriodProjectile.end_effects`는 예외로, 주기적 범위가 범위 안의 대상에게 종료 효과를 적용할 수 있기 때문에 `applied_effects`와 동일한 `{ "effect", "casting_type" }` 항목 형식을 사용합니다.
 
-Defaults for target selectors are often `Ally` because they come from Rust enum defaults. For damage, offensive projectiles, and enemy area effects, set `casting_target`, `applied_target`, or `target` explicitly.
+대상 선택기의 기본값은 Rust 열거형 기본값에서 오기 때문에 흔히 `Ally`입니다. 피해, 공격형 투사체, 적 대상 범위 효과의 경우 `casting_target`, `applied_target`, 또는 `target`을 명시적으로 설정하십시오.
 
-## Supported Type Summary
+## 지원 유형 요약
 
-| Category | Types |
+| 범주 | 유형 |
 | --- | --- |
-| Damage and sustain | `Attack`, `ApAttack`, `FixedAttack`, `Heal`, `Shield` |
-| Crowd control and disables | `Stun`, `Airborne`, `Knockback`, `Grab`, `Pull`, `Fear`, `Charm`, `Bind`, `Taunt`, `BlockAttack`, `BlockSkill`, `BlockMoveSkill`, `Invisible`, `Banish` |
-| Movement | `Rush`, `RushTime`, `Teleport`, `DirTeleport`, `MoveBack`, `MoveTo`, `MoveToTarget`, `RushMoveToBack` |
-| Projectiles and delayed areas | `LinearProjectile`, `BackToCasterLinearProjectile`, `TargetProjectile`, `TargetProjectileFromProjectile`, `TargetSplashProjectile`, `AutoTargetProjectile`, `RangeProjectile`, `LineRangeProjectile`, `RangePeriodProjectile`, `ApplyInProjectile`, `ParabolicProjectile` |
-| Area and barriers | `RangeEffect`, `ShrinkingBarrier` |
-| Buffs and over-time effects | `AddBuff`, `AddCasterBuff`, `RemoveCasterBuff`, `AddCasted` |
-| Composition and branching | `Combine`, `Delayed`, `WithSelf`, `SwitchByBuff`, `SwitchByLevel3`, `RandomTarget` |
-| Visual and audio triggers | `ViewEffect`, `CasterViewEffect`, `CasterAnimation`, `RemoveCasterAnimation`, `Sfx`, `TargetSfx` |
+| 피해 및 유지 | `Attack`, `ApAttack`, `FixedAttack`, `Heal`, `Shield` |
+| 군중 제어 및 행동 불가 | `Stun`, `Airborne`, `Knockback`, `Grab`, `Pull`, `Fear`, `Charm`, `Bind`, `Taunt`, `BlockAttack`, `BlockSkill`, `BlockMoveSkill`, `Invisible`, `Banish` |
+| 이동 | `Rush`, `RushTime`, `Teleport`, `DirTeleport`, `MoveBack`, `MoveTo`, `MoveToTarget`, `RushMoveToBack` |
+| 투사체 및 지연 범위 효과 | `LinearProjectile`, `BackToCasterLinearProjectile`, `TargetProjectile`, `TargetProjectileFromProjectile`, `TargetSplashProjectile`, `AutoTargetProjectile`, `RangeProjectile`, `LineRangeProjectile`, `RangePeriodProjectile`, `ApplyInProjectile`, `ParabolicProjectile` |
+| 범위와 장벽 | `RangeEffect`, `ShrinkingBarrier` |
+| 강화 효과와 지속 효과 | `AddBuff`, `AddCasterBuff`, `RemoveCasterBuff`, `AddCasted` |
+| 조합과 분기 | `Combine`, `Delayed`, `WithSelf`, `SwitchByBuff`, `SwitchByLevel3`, `RandomTarget` |
+| 시각 및 음향 발동 | `ViewEffect`, `CasterViewEffect`, `CasterAnimation`, `RemoveCasterAnimation`, `Sfx`, `TargetSfx` |
 
-## Damage And Sustain
+## 피해 및 유지
 
 ### `Attack`
 
-Deals physical attack damage. Use this for AD-style skill damage or basic-attack-like damage.
+물리 공격 피해를 줍니다. AD 유형의 기술 피해나 기본 공격과 유사한 피해에 사용합니다.
 
 ```json
 {
@@ -53,17 +53,17 @@ Deals physical attack damage. Use this for AD-style skill damage or basic-attack
 }
 ```
 
-- `damage`: flat damage.
-- `attack_ratio`: percent of the caster's attack added to the damage.
-- `hp_ratio`: percent of the caster's max HP added to the damage.
-- `target_hp_ratio`: percent of the target's max HP added to the damage.
-- `attack_effect_type`: target routing. See [Enums](enums.md#dataattackeffecttype).
+- `damage`: 고정 피해량.
+- `attack_ratio`: 시전자의 공격력 중 피해에 추가되는 비율.
+- `hp_ratio`: 시전자의 최대 HP 중 피해에 추가되는 비율.
+- `target_hp_ratio`: 대상의 최대 HP 중 피해에 추가되는 비율.
+- `attack_effect_type`: 대상 지정 방식. [Enums](enums.md#dataattackeffecttype)을 참조하십시오.
 
-Defaults: `damage = 0`, `attack_ratio = 100`, `hp_ratio = 0`, `target_hp_ratio = 0`, `attack_effect_type = "Target"`.
+기본값: `damage = 0`, `attack_ratio = 100`, `hp_ratio = 0`, `target_hp_ratio = 0`, `attack_effect_type = "Target"`.
 
 ### `ApAttack`
 
-Deals magic-power-based damage. Use this for AP-style skill damage.
+마력 기반 피해를 가합니다. AP 계열 기술 피해에 사용하십시오.
 
 ```json
 {
@@ -75,16 +75,16 @@ Deals magic-power-based damage. Use this for AP-style skill damage.
 }
 ```
 
-- `damage`: flat magic damage.
-- `attack_ratio`: percent of the caster's magic power added to the damage.
-- `hp_ratio`: percent of the caster's max HP added to the damage.
-- `attack_effect_type`: target routing.
+- `damage`: 고정 마법 피해.
+- `attack_ratio`: 시전자의 마력 중 피해에 추가되는 비율.
+- `hp_ratio`: 시전자의 최대 HP 중 피해에 추가되는 비율.
+- `attack_effect_type`: 대상 지정 방식.
 
-Defaults: `damage = 0`, `attack_ratio = 100`, `hp_ratio = 0`, `attack_effect_type = "Target"`.
+기본값: `damage = 0`, `attack_ratio = 100`, `hp_ratio = 0`, `attack_effect_type = "Target"`.
 
 ### `FixedAttack`
 
-Deals fixed damage through the fixed-damage path. Use it when the effect should not behave like normal AD or AP damage.
+고정 피해 판정을 통해 피해를 가합니다. 효과가 일반적인 AD 또는 AP 피해처럼 작동하지 않아야 할 때 사용하십시오.
 
 ```json
 {
@@ -97,11 +97,11 @@ Deals fixed damage through the fixed-damage path. Use it when the effect should 
 }
 ```
 
-Fields and defaults match `Attack`, but the damage resolution is fixed-damage resolution.
+필드와 기본값은 `Attack`과 같지만, 피해 계산은 고정 피해 판정을 따릅니다.
 
 ### `Heal`
 
-Restores HP. Use `heal_type` to decide whether the effect heals the caster, the selected target, an ally only, or nearby allies.
+체력을 회복합니다. `heal_type`을 사용하여 효과가 시전자 자신, 선택한 대상, 아군만, 또는 주변 아군을 회복할지 결정하십시오.
 
 ```json
 {
@@ -113,16 +113,16 @@ Restores HP. Use `heal_type` to decide whether the effect heals the caster, the 
 }
 ```
 
-- `amount`: flat heal.
-- `attack_ratio`: percent of caster attack added to the heal.
-- `ap_ratio`: percent of caster magic power added to the heal.
-- `heal_type`: heal routing. See [Enums](enums.md#datahealtype).
+- `amount`: 고정 회복량.
+- `attack_ratio`: 시전자 공격력 중 회복량에 추가되는 비율.
+- `ap_ratio`: 시전자 마력 중 회복량에 추가되는 비율.
+- `heal_type`: 회복 대상 지정 방식. [Enums](enums.md#datahealtype)를 참조하십시오.
 
-Defaults: `amount = 0`, `attack_ratio = 0`, `ap_ratio = 0`, `heal_type = "Any"`.
+기본값: `amount = 0`, `attack_ratio = 0`, `ap_ratio = 0`, `heal_type = "Any"`.
 
 ### `Shield`
 
-Adds a temporary shield to the target.
+대상에게 일시적인 보호막을 부여합니다.
 
 ```json
 {
@@ -134,18 +134,18 @@ Adds a temporary shield to the target.
 }
 ```
 
-- `amount`: flat shield value.
-- `attack_ratio`: percent of caster attack added to the shield.
-- `ap_ratio`: percent of caster magic power added to the shield.
-- `tick`: shield lifetime.
+- `amount`: 고정 보호막 수치.
+- `attack_ratio`: 시전자의 공격력 중 보호막에 추가되는 비율.
+- `ap_ratio`: 시전자의 마력 중 보호막에 추가되는 비율.
+- `tick`: 보호막 지속 시간.
 
-Defaults: `amount = 0`, `attack_ratio = 0`, `ap_ratio = 0`, `tick = 300`.
+기본값: `amount = 0`, `attack_ratio = 0`, `ap_ratio = 0`, `tick = 300`.
 
-## Crowd Control And Disables
+## 군중 제어 및 행동 불가
 
 ### `Stun`
 
-Prevents the target from acting for `duration` ticks.
+`duration` tick 동안 대상이 행동하지 못하게 합니다.
 
 ```json
 { "type": "Stun", "duration": 60 }
@@ -153,7 +153,7 @@ Prevents the target from acting for `duration` ticks.
 
 ### `Airborne`
 
-Lifts/disables the target for `duration` ticks. Use it for knock-up style hard CC.
+`duration` tick 동안 대상을 띄워 행동 불가 상태로 만듭니다. 공중에 띄우는 강력한 군중 제어에 사용하십시오.
 
 ```json
 { "type": "Airborne", "duration": 45 }
@@ -161,7 +161,7 @@ Lifts/disables the target for `duration` ticks. Use it for knock-up style hard C
 
 ### `Knockback`
 
-Pushes the target away with the given `speed` for `tick` ticks.
+주어진 `speed`로 `tick` tick 동안 대상을 밀쳐냅니다.
 
 ```json
 { "type": "Knockback", "speed": 2000, "tick": 10 }
@@ -169,7 +169,7 @@ Pushes the target away with the given `speed` for `tick` ticks.
 
 ### `Grab`
 
-Pulls the target toward the caster. `tick` is optional; if omitted, the engine uses the grab effect's internal timing behavior.
+대상을 시전자 쪽으로 끌어당깁니다. `tick`은 선택 항목이며, 생략하면 엔진이 잡기 효과의 내부 타이밍 동작을 사용합니다.
 
 ```json
 { "type": "Grab", "speed": 3500, "tick": 12 }
@@ -177,7 +177,7 @@ Pulls the target toward the caster. `tick` is optional; if omitted, the engine u
 
 ### `Pull`
 
-Pulls the target toward the effect point/caster for a fixed number of ticks.
+고정된 tick 수 동안 대상을 효과 지점/시전자 쪽으로 끌어당깁니다.
 
 ```json
 { "type": "Pull", "speed": 2500, "tick": 15 }
@@ -185,7 +185,7 @@ Pulls the target toward the effect point/caster for a fixed number of ticks.
 
 ### `Fear`
 
-Forces the target into fear behavior for `tick` ticks.
+`tick` tick 동안 대상이 공포 행동을 하게 만듭니다.
 
 ```json
 { "type": "Fear", "tick": 90 }
@@ -193,7 +193,7 @@ Forces the target into fear behavior for `tick` ticks.
 
 ### `Charm`
 
-Forces the target into charm behavior for `tick` ticks.
+`tick` tick 동안 대상이 매혹 행동을 하게 만듭니다.
 
 ```json
 { "type": "Charm", "tick": 90 }
@@ -201,7 +201,7 @@ Forces the target into charm behavior for `tick` ticks.
 
 ### `Bind`
 
-Roots or movement-locks the target for `duration` ticks.
+`duration` tick 동안 대상의 이동을 묶거나 봉쇄합니다.
 
 ```json
 { "type": "Bind", "duration": 90 }
@@ -209,7 +209,7 @@ Roots or movement-locks the target for `duration` ticks.
 
 ### `Taunt`
 
-Taunts the target for `duration` ticks.
+`duration` tick 동안 대상을 도발합니다.
 
 ```json
 { "type": "Taunt", "duration": 90 }
@@ -217,7 +217,7 @@ Taunts the target for `duration` ticks.
 
 ### `BlockAttack`
 
-Prevents basic attacks for `tick` ticks.
+`tick` tick 동안 기본 공격을 막습니다.
 
 ```json
 { "type": "BlockAttack", "tick": 90 }
@@ -225,7 +225,7 @@ Prevents basic attacks for `tick` ticks.
 
 ### `BlockSkill`
 
-Prevents skill use for `tick` ticks.
+`tick` tick 동안 기술 사용을 막습니다.
 
 ```json
 { "type": "BlockSkill", "tick": 90 }
@@ -233,7 +233,7 @@ Prevents skill use for `tick` ticks.
 
 ### `BlockMoveSkill`
 
-Prevents movement skills for `tick` ticks.
+`tick` tick 동안 이동 기술을 막습니다.
 
 ```json
 { "type": "BlockMoveSkill", "tick": 90 }
@@ -241,7 +241,7 @@ Prevents movement skills for `tick` ticks.
 
 ### `Invisible`
 
-Makes the target invisible for `tick` ticks.
+대상을 `tick`틱 동안 보이지 않게 만듭니다.
 
 ```json
 { "type": "Invisible", "tick": 120 }
@@ -249,7 +249,7 @@ Makes the target invisible for `tick` ticks.
 
 ### `Banish`
 
-Temporarily removes/locks the target with optional visual effect names for the lock and ending moments.
+잠금 시작 시점과 종료 시점의 시각 효과 이름을 선택적으로 지정하여, 대상을 일시적으로 제거하거나 잠급니다.
 
 ```json
 {
@@ -260,13 +260,13 @@ Temporarily removes/locks the target with optional visual effect names for the l
 }
 ```
 
-`lock_effect_name` and `end_effect_name` default to empty strings.
+`lock_effect_name` 및 `end_effect_name`의 기본값은 빈 문자열입니다.
 
-## Movement
+## 이동
 
-### `Rush`
+### `돌진`
 
-Moves the caster toward a position input. While rushing, the caster can apply nested effects to entities that match `casting_target`.
+시전자를 입력한 위치를 향해 이동시킵니다. 돌진하는 동안 시전자는 `casting_target`에 맞는 개체에게 중첩 효과를 적용할 수 있습니다.
 
 ```json
 {
@@ -280,18 +280,18 @@ Moves the caster toward a position input. While rushing, the caster can apply ne
 }
 ```
 
-- `speed`: base rush speed.
-- `range`: hit/check range during the rush.
-- `move_speed_ratio`: extra speed from caster move speed as a percent.
-- `casting_target`: entities affected during the rush.
-- `penetrate`: continue through targets instead of ending on first hit.
-- `applied_effects`: effects applied to collided targets.
+- `speed`: 기본 돌진 속도입니다.
+- `range`: 돌진 중 타격/판정 범위입니다.
+- `move_speed_ratio`: 시전자의 이동 속도에 비례해 추가되는 속도 백분율입니다.
+- `casting_target`: 돌진 중 영향을 받는 개체입니다.
+- `penetrate`: 첫 번째 적중 대상에서 멈추지 않고 계속 관통할지 여부입니다.
+- `applied_effects`: 충돌한 대상에게 적용되는 효과입니다.
 
-Defaults: `range = 0`, `move_speed_ratio = 0`, `casting_target = "Ally"`, `penetrate = false`, `applied_effects = []`.
+기본값: `range = 0`, `move_speed_ratio = 0`, `casting_target = "Ally"`, `penetrate = false`, `applied_effects = []`.
 
-### `RushTime`
+### `시간돌진`
 
-Moves the caster in the input direction for a fixed number of ticks instead of moving to a clicked destination.
+클릭한 목적지로 이동하는 대신, 입력한 방향으로 고정된 틱 수 동안 시전자를 이동시킵니다.
 
 ```json
 {
@@ -305,9 +305,9 @@ Moves the caster in the input direction for a fixed number of ticks instead of m
 }
 ```
 
-### `Teleport`
+### `순간이동`
 
-Instantly moves the caster to a position input or target position.
+시전자를 입력한 위치 또는 대상 위치로 즉시 이동시킵니다.
 
 ```json
 { "type": "Teleport" }
@@ -315,15 +315,15 @@ Instantly moves the caster to a position input or target position.
 
 ### `DirTeleport`
 
-Instantly moves the caster `moved` distance along a direction input.
+시전자를 방향 입력을 따라 `moved` 거리만큼 즉시 이동시킵니다.
 
-```json
+"ap_ratio": 50,
 { "type": "DirTeleport", "moved": 32000 }
-```
+- `tick`: 보호막 지속 시간.
 
 ### `MoveBack`
 
-Moves the caster away from the target's position for `tick` ticks at `speed`.
+시전자를 대상의 위치로부터 멀어지게 `tick`틱 동안 `speed` 속도로 이동시킵니다.
 
 ```json
 { "type": "MoveBack", "speed": 2500, "tick": 12 }
@@ -331,7 +331,7 @@ Moves the caster away from the target's position for `tick` ticks at `speed`.
 
 ### `MoveTo`
 
-Starts a movement state toward a target, position, or direction. When the movement ends, `end_effects` fire.
+대상, 위치 또는 방향을 향해 이동 상태를 시작합니다. 이동이 끝나면 `end_effects`가 발동합니다.
 
 ```json
 {
@@ -344,11 +344,11 @@ Starts a movement state toward a target, position, or direction. When the moveme
 }
 ```
 
-`range` is used for direction input. Defaults: `range = 0`, `end_effects = []`.
+`range`는 방향 입력에 사용됩니다. 기본값: `range = 0`, `end_effects = []`.
 
 ### `MoveToTarget`
 
-Starts a movement state that tracks a target entity. If the target is gone when the effect resolves, `end_effects` run immediately against the original input.
+대상 개체를 추적하는 이동 상태를 시작합니다. 효과가 해소될 때 대상이 사라졌다면, `end_effects`는 원래 입력값을 대상으로 즉시 실행됩니다.
 
 ```json
 {
@@ -361,7 +361,7 @@ Starts a movement state that tracks a target entity. If the target is gone when 
 
 ### `RushMoveToBack`
 
-Rushes behind the target and triggers `applied_effects` after the travel delay. Use this for dash-behind or backstab-style skills.
+대상의 뒤로 돌진한 뒤 이동 지연 후 `applied_effects`를 발동합니다. 돌진 후방 이동 또는 배후 찌르기 형식의 기술에 사용하십시오.
 
 ```json
 {
@@ -373,11 +373,11 @@ Rushes behind the target and triggers `applied_effects` after the travel delay. 
 }
 ```
 
-## Projectiles And Delayed Areas
+## 투사체 및 지연 영역
 
 ### `LinearProjectile`
 
-Spawns a projectile that travels in a straight line from the caster toward a target, position, or direction. It applies `applied_effects` on hit and runs `end_effects` when it ends.
+시전자에게서 대상, 위치 또는 방향을 향해 직선으로 날아가는 투사체를 생성합니다. 명중 시 `applied_effects`를 적용하고, 종료될 때 `end_effects`를 실행합니다.
 
 ```json
 {
@@ -395,11 +395,11 @@ Spawns a projectile that travels in a straight line from the caster toward a tar
 }
 ```
 
-Defaults: `penetrate = false`, `shape = { "Circle": { "radius": 10000 } }`, `applied_target = "Ally"`, `applied_effects = []`, `end_effects = []`.
+기본값: `penetrate = false`, `shape = { "Circle": { "radius": 10000 } }`, `applied_target = "Ally"`, `applied_effects = []`, `end_effects = []`.
 
 ### `BackToCasterLinearProjectile`
 
-Spawns a straight projectile from a position back to the caster. This is mainly useful as an `end_effect` of another projectile because projectile end effects pass a position input.
+시전자의 뒤쪽 위치에서 시전자에게 되돌아오는 직선 투사체를 생성합니다. 투사체의 종료 효과는 위치 입력을 전달하므로, 이는 주로 다른 투사체의 `end_effect`로 유용합니다.
 
 ```json
 {
@@ -417,7 +417,7 @@ Spawns a straight projectile from a position back to the caster. This is mainly 
 
 ### `TargetProjectile`
 
-Spawns a projectile that follows the selected target and applies effects on hit.
+선택한 대상을 추적하며 명중 시 효과를 적용하는 투사체를 생성합니다.
 
 ```json
 {
@@ -432,7 +432,7 @@ Spawns a projectile that follows the selected target and applies effects on hit.
 
 ### `TargetProjectileFromProjectile`
 
-Spawns a target-following projectile from the current projectile position. This only works inside an effect chain that has projectile optional info, such as another projectile's `applied_effects` or `end_effects`.
+현재 투사체 위치에서 대상을 추적하는 투사체를 생성합니다. 이는 다른 투사체의 `applied_effects` 또는 `end_effects`처럼 투사체 선택 정보가 있는 효과 연계 내부에서만 작동합니다.
 
 ```json
 {
@@ -447,7 +447,7 @@ Spawns a target-following projectile from the current projectile position. This 
 
 ### `TargetSplashProjectile`
 
-Spawns a projectile that follows a target, then can jump/splash to another target within `range`.
+대상을 추적하는 투사체를 생성한 뒤, `range` 안의 다른 대상으로 도약/확산할 수 있습니다.
 
 ```json
 {
@@ -463,7 +463,7 @@ Spawns a projectile that follows a target, then can jump/splash to another targe
 
 ### `AutoTargetProjectile`
 
-Automatically chooses an enemy target in `range`, preferring the caster's recently attacked target when valid, then fires a target-following projectile.
+`range` 안의 적 대상을 자동으로 선택하며, 유효할 경우 시전자가 최근 공격한 대상을 우선한 뒤, 대상을 추적하는 투사체를 발사합니다.
 
 ```json
 {
@@ -479,7 +479,7 @@ Automatically chooses an enemy target in `range`, preferring the caster's recent
 
 ### `RangeProjectile`
 
-Creates a delayed area at a position input. After `delay` ticks, it applies effects for `apply` ticks to targets in `shape`.
+위치 입력 지점에 지연 발동 범위를 생성합니다. `delay` 틱 이후, `shape` 안의 대상에게 `apply` 틱 동안 효과를 적용합니다.
 
 ```json
 {
@@ -495,7 +495,7 @@ Creates a delayed area at a position input. After `delay` ticks, it applies effe
 
 ### `LineRangeProjectile`
 
-Creates a delayed line-shaped area from the caster toward the input direction/target/position.
+시전자에서 입력 방향/대상/위치를 향해 지연 후 발동하는 선형 범위를 생성합니다.
 
 ```json
 {
@@ -512,7 +512,7 @@ Creates a delayed line-shaped area from the caster toward the input direction/ta
 
 ### `RangePeriodProjectile`
 
-Creates a stationary periodic area at a position input. It applies `applied_effects` every `period` ticks until `tick` expires, then applies `end_effects` to entities still in the area.
+위치 입력 지점에 고정된 주기 범위를 생성합니다. `tick`이 만료될 때까지 매 `period` 틱마다 `applied_effects`를 적용하고, 이후 범위 안에 아직 남아 있는 개체에 `end_effects`를 적용합니다.
 
 ```json
 {
@@ -530,11 +530,11 @@ Creates a stationary periodic area at a position input. It applies `applied_effe
 }
 ```
 
-`period` should be greater than `0`; the loader clamps it to at least `1` to avoid invalid data.
+`period`는 `0`보다 커야 하며, 불량 데이터를 방지하기 위해 로더가 최소 `1`로 보정합니다.
 
 ### `ApplyInProjectile`
 
-Creates an invisible projectile/area that waits `tick` ticks and then applies its effects to targets in `shape`. If `follow_caster` is true, the area follows the caster until it applies.
+보이지 않는 투사체/범위를 생성하여 `tick` 틱 동안 대기한 뒤, `shape` 안의 대상에게 효과를 적용합니다. `follow_caster`가 true이면 적용될 때까지 해당 범위가 시전자를 따라갑니다.
 
 ```json
 {
@@ -550,7 +550,7 @@ Creates an invisible projectile/area that waits `tick` ticks and then applies it
 
 ### `ParabolicProjectile`
 
-Spawns a projectile that travels in a fixed arc to a target or position. On arrival it applies hit effects and then `end_effects`. `range_effect_name` can show a preview/impact range visual while it travels.
+대상 또는 위치를 향해 고정된 포물선 궤적으로 이동하는 투사체를 생성합니다. 도착 시 명중 효과를 적용한 뒤 `end_effects`를 적용합니다. `range_effect_name`은 이동 중 미리보기/충돌 범위 시각 효과를 표시할 수 있습니다.
 
 ```json
 {
@@ -566,13 +566,13 @@ Spawns a projectile that travels in a fixed arc to a target or position. On arri
 }
 ```
 
-`range_effect_name` defaults to an empty string.
+`range_effect_name`의 기본값은 빈 문자열입니다.
 
-## Area And Barriers
+## 범위 및 장벽
 
 ### `RangeEffect`
 
-Immediately applies nested effects to targets inside `shape`. The area can be centered around the caster or placed forward from the caster.
+`shape` 내부 대상에게 중첩 효과를 즉시 적용합니다. 범위는 시전자 중심으로 지정하거나 시전자 전방에 배치할 수 있습니다.
 
 ```json
 {
@@ -587,11 +587,11 @@ Immediately applies nested effects to targets inside `shape`. The area can be ce
 }
 ```
 
-Defaults: `target = "Ally"`, `apply_type = "AroundCaster"`, `effects = []`.
+기본값: `target = "Ally"`, `apply_type = "AroundCaster"`, `effects = []`.
 
 ### `ShrinkingBarrier`
 
-Creates a circle around a target that follows that target and shrinks over time. Effects are applied on the barrier edge according to the engine barrier behavior.
+대상을 따라다니며 시간이 지날수록 축소되는 원형 장벽을 생성합니다. 효과는 엔진의 장벽 동작 방식에 따라 장벽 가장자리에 적용됩니다.
 
 ```json
 {
@@ -608,11 +608,11 @@ Creates a circle around a target that follows that target and shrinks over time.
 }
 ```
 
-## Buffs And Over-Time Effects
+## 강화 효과 및 지속 효과
 
 ### `AddBuff`
 
-Adds a stat/status `buff_state` to the selected target.
+선택한 대상에게 능력치/상태 `buff_state`를 추가합니다.
 
 ```json
 {
@@ -625,11 +625,11 @@ Adds a stat/status `buff_state` to the selected target.
 }
 ```
 
-See [Buffs and Stats](buffs-and-stats.md) for every `buff_state` field.
+모든 `buff_state` 필드는 [강화 효과 및 능력치](buffs-and-stats.md)를 참조하십시오.
 
 ### `AddCasterBuff`
 
-Adds a stat/status `buff_state` to the caster. If `only_to_enemy` is true, the buff is added only when the original target is an enemy.
+시전자에게 능력치/상태 `buff_state`를 추가합니다. `only_to_enemy`가 true이면 원래 대상이 적일 때만 강화 효과가 추가됩니다.
 
 ```json
 {
@@ -643,11 +643,11 @@ Adds a stat/status `buff_state` to the caster. If `only_to_enemy` is true, the b
 }
 ```
 
-`only_to_enemy` defaults to `false`.
+`only_to_enemy`의 기본값은 `false`입니다.
 
 ### `RemoveCasterBuff`
 
-Removes a named normal buff from the caster. Use it for temporary self-state cleanup, such as ending a mode buff.
+시전자에게서 이름이 지정된 일반 강화 효과를 제거합니다. 모드 강화 효과 종료처럼 일시적인 자기 상태를 정리할 때 사용합니다.
 
 ```json
 { "type": "RemoveCasterBuff", "name": "focus" }
@@ -655,7 +655,7 @@ Removes a named normal buff from the caster. Use it for temporary self-state cle
 
 ### `AddCasted`
 
-Adds a periodic over-time effect to the selected target. Every `period` ticks until `duration`, each nested effect is applied to that target.
+선택한 대상에게 주기적인 지속 효과를 추가합니다. `duration`까지 매 `period` 틱마다 각 중첩 효과가 해당 대상에게 적용됩니다.
 
 ```json
 {
@@ -669,13 +669,13 @@ Adds a periodic over-time effect to the selected target. Every `period` ticks un
 }
 ```
 
-`casted_type` controls the over-time category/icon and attack type. Values: `Bleed`, `Poison`, `Fire`, `Heal`. Default: `Fire`. `period` should be greater than `0`; the loader clamps it to at least `1`.
+`casted_type`은 지속 효과 범주/아이콘과 공격 유형을 제어합니다. 값: `Bleed`, `Poison`, `Fire`, `Heal`. 기본값: `Fire`. `period`는 `0`보다 커야 하며, 로더는 이를 최소 `1`로 보정합니다.
 
-## Composition And Branching
+## 조합 및 분기
 
 ### `Combine`
 
-Runs multiple effects immediately with the same input.
+동일한 입력으로 여러 효과를 즉시 실행합니다.
 
 ```json
 {
@@ -689,7 +689,7 @@ Runs multiple effects immediately with the same input.
 
 ### `Delayed`
 
-Queues nested effects to run after `tick` ticks.
+중첩된 효과를 `tick`틱 후에 실행하도록 대기열에 넣습니다.
 
 ```json
 {
@@ -703,7 +703,7 @@ Queues nested effects to run after `tick` ticks.
 
 ### `WithSelf`
 
-Runs nested effects with the caster as the target/self context.
+시전자를 대상/자기 자신 문맥으로 하여 중첩된 효과를 실행합니다.
 
 ```json
 {
@@ -716,7 +716,7 @@ Runs nested effects with the caster as the target/self context.
 
 ### `SwitchByBuff`
 
-Chooses one of two effects depending on whether the caster currently has `buff_name`.
+시전자가 현재 `buff_name`을 보유하고 있는지에 따라 두 효과 중 하나를 선택합니다.
 
 ```json
 {
@@ -729,7 +729,7 @@ Chooses one of two effects depending on whether the caster currently has `buff_n
 
 ### `SwitchByLevel3`
 
-Chooses one effect before level 3 and another at level 3 or higher.
+3레벨 이전에는 한 효과를, 3레벨 이상에서는 다른 효과를 선택합니다.
 
 ```json
 {
@@ -741,7 +741,7 @@ Chooses one effect before level 3 and another at level 3 or higher.
 
 ### `RandomTarget`
 
-Chooses a random target in `range` that matches `casting_target`, then applies nested effects to it.
+`range` 내에서 `casting_target`과 일치하는 무작위 대상을 선택한 다음, 그 대상에게 중첩된 효과를 적용합니다.
 
 ```json
 {
@@ -755,15 +755,15 @@ Chooses a random target in `range` that matches `casting_target`, then applies n
 }
 ```
 
-Defaults: `casting_target = "Ally"`, `from_projectile = false`.
+기본값: `casting_target = "Ally"`, `from_projectile = false`.
 
-## Visual And Audio Triggers
+## 시각 및 음향 트리거
 
-These trigger named visual/audio systems. Register custom systems through [Visual Bindings](visual-bindings.md).
+이는 이름이 지정된 시각/음향 계통을 작동시킵니다. 사용자 지정 계통은 [Visual Bindings](visual-bindings.md)를 통해 등록하십시오.
 
 ### `ViewEffect`
 
-Plays a named visual effect at the effect target/input position.
+효과 대상/입력 위치에서 이름이 지정된 시각 효과를 재생합니다.
 
 ```json
 { "type": "ViewEffect", "name": "fire_burst" }
@@ -771,7 +771,7 @@ Plays a named visual effect at the effect target/input position.
 
 ### `CasterViewEffect`
 
-Plays a named visual effect at the caster position.
+시전자 위치에서 이름이 지정된 시각 효과를 재생합니다.
 
 ```json
 { "type": "CasterViewEffect", "name": "caster_flash" }
@@ -779,7 +779,7 @@ Plays a named visual effect at the caster position.
 
 ### `CasterAnimation`
 
-Adds a named caster animation state for `tick` ticks.
+`tick`틱 동안 이름이 지정된 시전자 애니메이션 상태를 추가합니다.
 
 ```json
 { "type": "CasterAnimation", "name": "cast_pose", "tick": 30 }
@@ -787,7 +787,7 @@ Adds a named caster animation state for `tick` ticks.
 
 ### `RemoveCasterAnimation`
 
-Removes a named caster animation state.
+이름이 지정된 시전자 애니메이션 상태를 제거합니다.
 
 ```json
 { "type": "RemoveCasterAnimation", "name": "cast_pose" }
@@ -795,7 +795,7 @@ Removes a named caster animation state.
 
 ### `Sfx`
 
-Plays a named sound effect at the caster position.
+시전자 위치에서 이름이 지정된 음향 효과를 재생합니다.
 
 ```json
 { "type": "Sfx", "name": "fire_cast" }
@@ -803,22 +803,22 @@ Plays a named sound effect at the caster position.
 
 ### `TargetSfx`
 
-Plays a named sound effect at the target, position input, or current projectile position.
+대상, 위치 입력 지점 또는 현재 투사체 위치에서 이름이 지정된 음향 효과를 재생합니다.
 
 ```json
 { "type": "TargetSfx", "name": "fire_hit" }
 ```
 
-## Engine Effects Not Exposed To Data
+## 데이터에 노출되지 않은 엔진 효과
 
-The engine has additional effect implementations that are not currently mapped to `.data_champion` JSON. They are intentionally not listed as supported `type` strings above.
+엔진에는 현재 `.data_champion` JSON에 매핑되지 않은 추가 효과 구현이 있습니다. 위에서 지원되는 `type` 문자열로 의도적으로 나열하지 않았습니다.
 
-| Internal category | Why it is not a normal data effect yet |
+| 내부 분류 | 아직 일반 데이터 효과가 아닌 이유 |
 | --- | --- |
-| `AddEffectBuff`, `AddCasterEffectBuff`, `DamageShare` | These use `EffectBuff`, a runtime buff behavior trait. Data JSON currently models normal stat/status buffs, not arbitrary effect-buff behavior objects. |
-| Summons such as `SpawnBear`, `SpawnEagle`, `SpawnGhoul`, `SpawnIllusion`, `SpawnRevenant` | These depend on hard-coded summoned entity behavior and champion-specific assumptions. |
-| `TowerAttack` | Tied to tower/minion combat rules, including epic timing behavior. Not a general champion skill effect. |
-| Champion-specific effects such as Bard, Druid, Werewolf, Voodoo Shaman, Ice Mage, and similar ult/skill modules | These encode bespoke champion mechanics. They need separate data schema work before they can be safely exposed to mod authors. |
-| Additional projectile movement internals such as bouncing target movement | Some are reachable only through hard-coded champion effects. They need explicit JSON fields and validation before public support. |
+| `AddEffectBuff`, `AddCasterEffectBuff`, `DamageShare` | 이들은 런타임 버프 동작 특성인 `EffectBuff`를 사용합니다. 현재 데이터 JSON은 임의의 효과 버프 동작 객체가 아니라 일반 능력치/상태 버프를 모델링합니다. |
+| `SpawnBear`, `SpawnEagle`, `SpawnGhoul`, `SpawnIllusion`, `SpawnRevenant` 같은 소환 | 이들은 하드코딩된 소환 개체 동작과 챔피언별 가정에 의존합니다. |
+| `TowerAttack` | 장엄한 타이밍 동작을 포함한 타워/미니언 전투 규칙에 묶여 있습니다. 일반적인 챔피언 기술 효과가 아닙니다. |
+| 바드, 드루이드, 늑대인간, 부두 주술사, 빙결 마법사 및 유사한 궁극기/기술 모듈과 같은 챔피언 전용 효과 | 이들은 맞춤형 챔피언 메커니즘을 인코딩합니다. 모드 제작자에게 안전하게 노출하기 전에 별도의 데이터 스키마 작업이 필요합니다. |
+| 튕기는 대상 이동과 같은 추가 투사체 이동 내부 기능 | 일부는 하드코딩된 챔피언 효과를 통해서만 접근할 수 있습니다. 공개 지원 전에 명시적인 JSON 필드와 검증이 필요합니다. |
 
-When adding another effect to data support, update `DataEffectDef` in `game-core/src/setting/champion/data_driven.rs` and document its JSON shape here.
+데이터 지원에 다른 효과를 추가할 때는 `game-core/src/setting/champion/data_driven.rs`의 `DataEffectDef`를 갱신하고, 해당 JSON 형식을 여기 문서화하십시오.

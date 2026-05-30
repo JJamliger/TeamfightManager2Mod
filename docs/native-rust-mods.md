@@ -1,19 +1,19 @@
-# Native Rust Mods
+# 네이티브 Rust 모드
 
-Native Rust mods are for projects that need custom code. Use them when data-only champions or asset overrides are not enough.
+네이티브 Rust 모드는 맞춤형 코드가 필요한 프로젝트를 위한 것입니다. 데이터 전용 챔피언이나 자산 덮어쓰기로는 부족할 때 사용하십시오.
 
-You do not need this path for normal JSON, image, text, or data-only champion mods. Native Rust mods require the Mod SDK.
+일반적인 JSON, 이미지, 텍스트 또는 데이터 전용 챔피언 모드에는 이 경로가 필요하지 않습니다. 네이티브 Rust 모드에는 Mod SDK가 필요합니다.
 
-## Before You Start
+## 시작하기 전에
 
-Native DLLs are tied to the game version and SDK they were built with.
+네이티브 DLL은 그것이 빌드된 게임 버전과 SDK에 종속됩니다.
 
-- Build with the Mod SDK that matches the game version you want to support.
-- Rebuild your DLL after game updates when the SDK changes.
-- Make sure the mod id returned by your DLL matches the mod folder name.
-- If the DLL is incompatible, the game will show a diagnostics message on the title screen.
+- 지원하려는 게임 버전에 맞는 Mod SDK로 빌드하십시오.
+- 게임 업데이트로 SDK가 변경되면 DLL을 다시 빌드하십시오.
+- DLL이 반환하는 모드 ID가 모드 폴더 이름과 일치하는지 확인하십시오.
+- DLL이 호환되지 않으면 게임은 타이틀 화면에 진단 메시지를 표시합니다.
 
-## Minimal DLL
+## 최소 DLL
 
 ```rust
 use mod_api::*;
@@ -27,11 +27,11 @@ fn init(_ctx: &GameCtx) -> ModRegistration {
 declare_mod!(init);
 ```
 
-The `declare_mod!` macro exports the entry point the game needs in order to load the DLL.
+`declare_mod!` 매크로는 게임이 DLL을 불러오는 데 필요한 진입점을 내보냅니다.
 
-## Registering Content
+## 콘텐츠 등록
 
-Most native mods create a `ModRegistration`, add content to it, and return it:
+대부분의 네이티브 모드는 `ModRegistration`을 생성하고, 여기에 콘텐츠를 추가한 뒤, 그것을 반환합니다:
 
 ```rust
 fn init(_ctx: &GameCtx) -> ModRegistration {
@@ -46,24 +46,24 @@ fn init(_ctx: &GameCtx) -> ModRegistration {
 }
 ```
 
-You can register:
+다음을 등록할 수 있습니다:
 
-- `ModChampionInfo`: a champion with custom runtime logic.
-- `ModItemInfo`: an item with metadata and runtime callbacks.
-- `ModDraftScoreHook`: ban/pick AI score adjustment hooks.
-- `ModPlayerInputAi`: final player input replacement hooks.
-- `ModExtension`: lifecycle hooks for UI, scene, and asset behavior.
-- `ModServerExtension`: server-side management hooks and client command handling.
+- `ModChampionInfo`: 맞춤형 런타임 로직을 가진 챔피언.
+- `ModItemInfo`: 메타데이터와 런타임 콜백을 가진 아이템.
+- `ModDraftScoreHook`: 밴/픽 AI 점수 조정 훅.
+- `ModPlayerInputAi`: 최종 플레이어 입력 대체 훅.
+- `ModExtension`: UI, 장면 및 자산 동작을 위한 생명주기 훅.
+- `ModServerExtension`: 서버 측 관리 훅과 클라이언트 명령 처리.
 
-For AI-specific examples, see [Native AI Hooks](native-ai-hooks.md).
-For the full exported Rust API surface, see [Native Mod API Reference](native-mod-api-reference.md).
-For save-slot data owned by your mod, see [Mod Save Data](mod-save-data.md).
+AI 전용 예시는 [Native AI Hooks](native-ai-hooks.md)를 참조하십시오.
+내보내진 전체 Rust API 범위는 [Native Mod API Reference](native-mod-api-reference.md)를 참조하십시오.
+모드가 소유하는 저장 슬롯 데이터는 [Mod Save Data](mod-save-data.md)를 참조하십시오.
 
-## Reading Current Save Data
+## 현재 저장 데이터 읽기
 
-`Scene::InGame` gives extensions a `ClientData` handle. It exposes the current client-side game data directly, using the game's internal data types such as `Athlete`, `Team`, `MatchInfo`, `League`, and `ChampionInfo`.
+`Scene::InGame`은 확장 기능에 `ClientData` 핸들을 제공합니다. 이는 `Athlete`, `Team`, `MatchInfo`, `League`, `ChampionInfo`와 같은 게임 내부 자료형을 사용하여 현재 클라이언트 측 게임 데이터를 직접 노출합니다.
 
-For quick ID-based lookups, call the helper methods on `ClientData`:
+빠르게 ID 기반 조회를 하려면 `ClientData`의 도우미 메서드를 호출하십시오:
 
 ```rust
 impl ModExtension for MyExtension {
@@ -87,9 +87,9 @@ impl ModExtension for MyExtension {
 }
 ```
 
-These helpers return borrowed internal data. They are not DTOs or copied view models. The borrow type is Rust's normal `Ref<'_, T>` guard from the client's internal `RefCell`; use it like `&T` and let it drop before taking another mutable borrow.
+이 도우미들은 내부 데이터를 빌려서 반환합니다. DTO나 복사된 뷰 모델이 아닙니다. 빌림 형식은 클라이언트 내부 `RefCell`의 Rust 일반 `Ref<'_, T>` 가드이므로 `&T`처럼 사용하고, 다음 가변 빌림을 하기 전에 해제되도록 두십시오.
 
-If you want to keep one database borrow and do several lookups, use `data.db()`:
+데이터베이스 빌림 하나를 유지한 채 여러 조회를 하고 싶다면 `data.db()`를 사용하십시오:
 
 ```rust
 let db = data.db();
@@ -100,7 +100,7 @@ let match_info = db.normal_match(match_id);
 let champion = db.champion_info("fighter");
 ```
 
-Available lookup helpers include:
+사용 가능한 조회 도우미에는 다음이 포함됩니다:
 
 - `player_team_id`, `player_team`, `team`, `team_ids`
 - `athlete`, `athlete_ids`
@@ -115,9 +115,9 @@ Available lookup helpers include:
 - `solo_rank_match`, `solo_rank_match_ids`
 - `champion_info`
 
-## Champion Example
+## 챔피언 예시
 
-`ModChampionInfo` defines the champion's identity, stats, actions, and optional passive:
+`ModChampionInfo`는 챔피언의 정체성, 능력치, 행동, 그리고 선택적 패시브를 정의합니다:
 
 ```rust
 #[derive(Debug)]
@@ -163,9 +163,9 @@ impl ModChampionInfo for MyChampion {
 }
 ```
 
-Each action can return a `ModEffect`. The effect uses `GameCtx` to read game state and apply damage, healing, buffs, crowd control, or debug drawing.
+각 행동은 `ModEffect`를 반환할 수 있습니다. 이 효과는 `GameCtx`를 사용해 게임 상태를 읽고 피해, 치유, 강화 효과, 군중 제어 또는 디버그 그리기를 적용합니다.
 
-## Action and Effect Example
+## 행동 및 효과 예시
 
 ```rust
 #[derive(Clone, Debug)]
@@ -213,11 +213,11 @@ impl ModEffectType for MySkillEffect {
 }
 ```
 
-Actions, passives, and items that are cloned by the game need `clone_box`. Deriving `Clone` and returning `Box::new(self.clone())` is usually enough.
+게임에서 복제되는 동작, 패시브, 아이템에는 `clone_box`가 필요합니다. `Clone`을 derive하고 `Box::new(self.clone())`를 반환하는 것만으로도 대체로 충분합니다.
 
-## Item Example
+## 아이템 예시
 
-`ModItemInfo` defines a new item and any callbacks it needs:
+`ModItemInfo`는 새 아이템과 그에 필요한 모든 콜백을 정의합니다:
 
 ```rust
 #[derive(Clone, Debug, Default)]
@@ -259,15 +259,15 @@ impl ModItemInfo for MyItem {
 }
 ```
 
-Use `previous_tier` to make the item reachable from an existing base item without replacing the full item setting file.
+전체 아이템 설정 파일을 교체하지 않고도 기존 기본 아이템에서 해당 아이템에 도달할 수 있게 하려면 `previous_tier`를 사용하십시오.
 
-## Runtime Services Between Native Mods
+## 네이티브 모드 간 런타임 서비스
 
-Native DLL mods can expose small runtime services for other native DLL mods. Use this when you want to publish a reusable developer/library mod that other mods depend on.
+네이티브 DLL 모드는 다른 네이티브 DLL 모드를 위해 작은 런타임 서비스를 노출할 수 있습니다. 다른 모드가 의존하는 재사용 가능한 개발자/라이브러리 모드를 배포하려는 경우 이를 사용하십시오.
 
-This is not direct DLL linking. The game owns the service registry, loads dependencies first, and lets a consumer mod query a provider mod by mod id, service id, and version requirement.
+이것은 직접적인 DLL 연결이 아닙니다. 게임이 서비스 레지스트리를 소유하고, 의존성을 먼저 불러온 뒤, 소비자 모드가 모드 id, 서비스 id, 버전 요구사항으로 제공자 모드를 조회할 수 있게 합니다.
 
-The dependency still belongs in the consumer's `mod.mod_info`:
+의존성은 여전히 소비자 측 `mod.mod_info`에 포함되어야 합니다:
 
 ```json
 {
@@ -284,11 +284,11 @@ The dependency still belongs in the consumer's `mod.mod_info`:
 }
 ```
 
-When the consumer is enabled, an installed dependency is included automatically and loaded first. This works the same for local folders and Workshop-installed folders because `mod.mod_info` is the game-side source of truth.
+소비자가 활성화되면, 설치된 의존성이 자동으로 포함되어 가장 먼저 불러와집니다. 이는 로컬 폴더와 Workshop 설치 폴더 모두에 동일하게 적용되는데, `mod.mod_info`가 게임 측의 단일한 기준 정보이기 때문입니다.
 
-The `base` entry in that dependency list is special: it means the Teamfight Manager 2 game version, not a base asset package. Use it to declare the game version line your native DLL was built and tested against.
+해당 의존성 목록의 `base` 항목은 특별합니다: 기본 자산 패키지가 아니라 Teamfight Manager 2 게임 버전을 뜻합니다. 네이티브 DLL이 어떤 게임 버전 계열을 기준으로 빌드되고 테스트되었는지 선언할 때 사용하십시오.
 
-Provider example:
+제공자 예시:
 
 ```rust
 use std::ffi::c_void;
@@ -327,7 +327,7 @@ fn init(ctx: &GameCtx) -> ModRegistration {
 declare_mod!(init);
 ```
 
-Consumer example:
+소비자 예시:
 
 ```rust
 use mod_api::*;
@@ -359,18 +359,18 @@ fn init(ctx: &GameCtx) -> ModRegistration {
 declare_mod!(init);
 ```
 
-Keep service boundaries simple:
+서비스 경계는 단순하게 유지하십시오:
 
-- Use `#[repr(C)]` service structs.
-- Keep provider and consumer layouts exactly matched.
-- Prefer primitive values, opaque handles, and explicit function pointers.
-- Do not pass Rust trait objects, `String`, `Vec`, or provider-owned allocations unless you also define clear ownership rules.
-- Keep the provider service data and vtable valid for as long as the provider DLL is loaded.
-- Change the service id or major version when you break the service layout.
+- `#[repr(C)]` 서비스 구조체를 사용하십시오.
+- 제공자와 소비자의 레이아웃을 정확히 일치시키십시오.
+- 기본형 값, 불투명 핸들, 명시적인 함수 포인터를 우선 사용하십시오.
+- 명확한 소유권 규칙도 함께 정의하지 않는 한 Rust 트레이트 객체, `String`, `Vec` 또는 제공자 소유 할당을 전달하지 마십시오.
+- 제공자 DLL이 로드되어 있는 동안에는 제공자 서비스 데이터와 vtable이 유효하도록 유지하십시오.
+- 서비스 레이아웃을 깨뜨리는 경우 서비스 id 또는 주 버전을 변경하십시오.
 
-## Extension Hooks
+## 확장 훅
 
-`ModExtension` lets a native mod react to the scene, UI, and asset lifecycle:
+`ModExtension`은 네이티브 모드가 장면, UI 및 에셋 생명주기에 반응할 수 있게 합니다:
 
 ```rust
 #[derive(Default)]
@@ -385,15 +385,15 @@ impl ModExtension for MyExtension {
 }
 ```
 
-These hooks are powerful, so keep them focused:
+이러한 훅은 강력하므로, 용도를 집중시키십시오:
 
-- Check that UI nodes exist before changing them.
-- Add small UI pieces instead of replacing full base layouts.
-- Register event handlers once, or guard setup so it does not run repeatedly.
+- 변경하기 전에 UI 노드가 존재하는지 확인하십시오.
+- 전체 기본 레이아웃을 교체하는 대신 작은 UI 요소를 추가하십시오.
+- 이벤트 처리기는 한 번만 등록하거나, 설정이 반복 실행되지 않도록 보호 장치를 두십시오.
 
-## Server Extension Hooks
+## 서버 확장 훅
 
-`ModServerExtension` runs on the game server side. Use it for management/save logic that must be authoritative, not for direct UI work.
+`ModServerExtension`은 게임 서버 측에서 실행됩니다. 직접적인 UI 작업이 아니라, 권한 있는 처리가 필요한 관리/저장 로직에 사용하십시오.
 
 ```rust
 use mod_api::*;
@@ -421,7 +421,7 @@ impl ModServerExtension for MyServerExtension {
 }
 ```
 
-Register it separately from the client/UI extension:
+클라이언트/UI 확장과는 별도로 등록하십시오:
 
 ```rust
 fn init(_ctx: &GameCtx) -> ModRegistration {
@@ -432,11 +432,11 @@ fn init(_ctx: &GameCtx) -> ModRegistration {
 }
 ```
 
-The server context exposes the actual `Database` and `ServerState` used by the server. Changes made here are authoritative. Keep edits narrow and prefer existing game methods when they exist, because bypassing server rules can desync multiplayer saves or skip required side effects.
+서버 컨텍스트는 서버가 사용하는 실제 `Database`와 `ServerState`를 드러냅니다. 여기에서 이루어진 변경은 권한 있는 변경입니다. 편집은 최소한으로 유지하고, 기존 게임 메서드가 있다면 이를 우선 사용하십시오. 서버 규칙을 우회하면 멀티플레이어 저장 데이터의 동기화가 어긋나거나 필요한 부수 효과가 누락될 수 있습니다.
 
-## Mod Commands and Events
+## 모드 명령과 이벤트
 
-Client/UI code can send a small command packet to the server:
+클라이언트/UI 코드는 작은 명령 패킷을 서버로 보낼 수 있습니다:
 
 ```rust
 impl ModExtension for MyClientExtension {
@@ -456,7 +456,7 @@ impl ModExtension for MyClientExtension {
 }
 ```
 
-The matching server extension handles the command and can emit events back to clients:
+대응하는 서버 확장은 그 명령을 처리하고 클라이언트에 이벤트를 다시 보낼 수 있습니다:
 
 ```rust
 impl ModServerExtension for MyServerExtension {
@@ -474,9 +474,9 @@ impl ModServerExtension for MyServerExtension {
 }
 ```
 
-Commands and events are namespaced by mod id. Names are limited to 128 bytes, payloads are limited to 1 MiB, and invalid packets are rejected.
+명령과 이벤트는 모드 ID를 기준으로 구분됩니다. 이름은 128바이트로 제한되며, 페이로드는 1 MiB로 제한되고, 잘못된 패킷은 거부됩니다.
 
-Server events can be sent to different targets:
+서버 이벤트는 서로 다른 대상으로 보낼 수 있습니다:
 
 ```rust
 ctx.emit_event("broadcast_event", vec![]);
@@ -485,11 +485,11 @@ ctx.emit_event_to_team(team_id, "team_event", vec![]);
 ctx.emit_event_to_command_sender(command, "reply_event", vec![]);
 ```
 
-Use targeted events for UI replies or team-private information in multiplayer. Use broadcast events only for information every connected client can receive.
+멀티플레이어에서 UI 응답이나 팀 전용 정보에는 대상 지정 이벤트를 사용하십시오. 연결된 모든 클라이언트가 받아도 되는 정보에만 전체 방송 이벤트를 사용하십시오.
 
-## Per-Save Mod Data
+## 저장별 모드 데이터
 
-Native extensions can store custom data in the current save through `ClientData::mod_save_*` helpers when the scene is `Scene::InGame`.
+네이티브 확장은 장면이 `Scene::InGame`일 때 `ClientData::mod_save_*` 도우미를 통해 현재 저장 데이터에 사용자 지정 데이터를 저장할 수 있습니다.
 
 ```rust
 impl ModExtension for MyExtension {
@@ -506,11 +506,11 @@ impl ModExtension for MyExtension {
 }
 ```
 
-The data is namespaced by mod id and saved with the game database. Multiplayer league writes are host-only, and write helpers return `false` if the request cannot be queued. See [Mod Save Data](mod-save-data.md) for limits, migration patterns, and the full helper list.
+데이터는 모드 아이디별로 구분되어 게임 데이터베이스와 함께 저장됩니다. 멀티플레이어 리그 쓰기는 호스트만 가능하며, 쓰기 도우미는 요청을 대기열에 넣을 수 없으면 `false`를 반환합니다. 제한 사항, 마이그레이션 방식, 전체 도우미 목록은 [모드 저장 데이터](mod-save-data.md)를 참조하십시오.
 
-## Building With the Mod SDK
+## 모드 SDK로 빌드하기
 
-The SDK contains the prebuilt `mod-api` files and build helpers:
+SDK에는 미리 빌드된 `mod-api` 파일과 빌드 도우미가 포함되어 있습니다:
 
 ```text
 mod-sdk/
@@ -525,14 +525,14 @@ mod-sdk/
     src/lib.rs
 ```
 
-For simple one-file mods, a folder with only `src/lib.rs` still works. The SDK calls `rustc` directly and injects the matching `mod_api` crate:
+간단한 단일 파일 모드의 경우 `src/lib.rs`만 있는 폴더도 여전히 사용할 수 있습니다. SDK는 `rustc`를 직접 호출하고 일치하는 `mod_api` 크레이트를 주입합니다:
 
 ```bat
 cd mod-sdk
 build_mod.bat path\to\your_mod\src\lib.rs
 ```
 
-For mods that need external Rust crates, use a normal Cargo project in the mod folder:
+외부 Rust 크레이트가 필요한 모드의 경우, 모드 폴더 안에서 일반 Cargo 프로젝트를 사용하십시오:
 
 ```text
 my_mod/
@@ -543,7 +543,7 @@ my_mod/
   preview.png
 ```
 
-Example `Cargo.toml`:
+`Cargo.toml` 예시:
 
 ```toml
 [package]
@@ -559,24 +559,24 @@ rand = "0.8"
 serde_json = "1.0"
 ```
 
-Do not add `mod-api` to `[dependencies]` in the public SDK workflow. The uploader and SDK build script inject the matching prebuilt `mod_api` crate automatically so the DLL matches the game SDK.
+공개 SDK 작업 흐름에서는 `[dependencies]`에 `mod-api`를 추가하지 마십시오. 업로더와 SDK 빌드 스크립트가 일치하는 미리 빌드된 `mod_api` 크레이트를 자동으로 주입하므로 DLL이 게임 SDK와 일치하게 됩니다.
 
-Manual Cargo build through the SDK:
+SDK를 통한 수동 Cargo 빌드:
 
 ```bat
 cd mod-sdk
 build_mod.bat path\to\your_mod
 ```
 
-The build copies the produced DLL back to the mod folder as `my_mod.dll`, using the mod folder name. Keep the folder name and the `ModRegistration::new("my_mod")` id aligned.
+빌드는 생성된 DLL을 모드 폴더 이름을 사용해 `my_mod.dll`로 모드 폴더에 다시 복사합니다. 폴더 이름과 `ModRegistration::new("my_mod")` 아이디를 일치시키십시오.
 
-If you develop inside another Cargo workspace and Cargo says the package is unexpectedly inside a workspace, add an empty `[workspace]` table to the mod's `Cargo.toml` or move the mod folder outside that workspace.
+다른 Cargo 워크스페이스 안에서 개발 중인데 Cargo가 패키지가 예기치 않게 워크스페이스 안에 있다고 말하면, 모드의 `Cargo.toml`에 빈 `[workspace]` 테이블을 추가하거나 모드 폴더를 해당 워크스페이스 밖으로 옮기십시오.
 
-## Uploading Native Rust Mods
+## 네이티브 Rust 모드 업로드하기
 
-`TFM2ModUploader.exe` can build and upload a native Rust mod when the SDK is installed next to it.
+SDK가 바로 옆에 설치되어 있으면 `TFM2ModUploader.exe`는 네이티브 Rust 모드를 빌드하고 업로드할 수 있습니다.
 
-Recommended layout:
+권장 배치:
 
 ```text
 TeamfightManager2.exe
@@ -591,23 +591,23 @@ mod-sdk/
   rust-toolchain.toml
 ```
 
-The uploader checks the selected mod folder in this order:
+업로더는 선택한 모드 폴더를 다음 순서로 확인합니다:
 
-1. If `Cargo.toml` exists, it builds with Cargo. This supports external crates from crates.io or other normal Cargo dependency sources.
-2. If there is no `Cargo.toml` but `src/lib.rs` exists, it uses the older direct `rustc` build.
-3. If neither exists, no native build step is shown.
+1. `Cargo.toml`이 있으면 Cargo로 빌드합니다. 이는 crates.io 또는 그 밖의 일반적인 Cargo 의존성 원본의 외부 크레이트를 지원합니다.
+2. `Cargo.toml`은 없지만 `src/lib.rs`가 있으면, 이전의 직접 `rustc` 빌드를 사용합니다.
+3. 둘 다 없으면, 네이티브 빌드 단계는 표시되지 않습니다.
 
-When **Build native Rust code before uploading** is checked, the uploader uses the SDK's `mod-api` files to build the DLL first. It then uploads the compiled DLL and the rest of the runtime mod assets. Build-only files and source folders such as `src/`, `target/`, `Cargo.toml`, and `Cargo.lock` are skipped during upload, so your Rust source code is not sent to Workshop.
+**업로드 전에 네이티브 Rust 코드 빌드**를 선택하면, 업로더는 SDK의 `mod-api` 파일을 사용해 먼저 DLL을 빌드합니다. 그다음 컴파일된 DLL과 나머지 실행용 모드 자산을 업로드합니다. `src/`, `target/`, `Cargo.toml`, `Cargo.lock` 같은 빌드 전용 파일과 소스 폴더는 업로드 중 건너뛰므로, Rust 소스 코드는 Workshop으로 전송되지 않습니다.
 
-If you already built the DLL yourself, leave the DLL in the mod folder and uncheck the build option before uploading.
+이미 직접 DLL을 빌드했다면, DLL을 모드 폴더에 그대로 두고 업로드 전에 빌드 옵션 선택을 해제하십시오.
 
-The SDK and game version should match. After a game update that changes the SDK, rebuild the DLL and upload a new Workshop update.
-## Common Native Load Problems
+SDK와 게임 버전은 일치해야 합니다. SDK가 변경되는 게임 갱신 후에는 DLL을 다시 빌드하고 새로운 Workshop 갱신본을 업로드하십시오.
+## 일반적인 네이티브 불러오기 문제
 
-- The DLL is missing from the mod folder.
-- The DLL was built with a different SDK.
-- The DLL registers a mod id that does not match the folder name.
-- The DLL does not export the expected entry point because `declare_mod!` was not used.
-- The DLL does not export the expected API version symbol because it was built with an old SDK.
-- The Rust toolchain or SDK artifacts do not match the target game version.
-- The entry function panicked or returned an invalid registration.
+- DLL이 모드 폴더에 없습니다.
+- DLL이 다른 SDK로 빌드되었습니다.
+- DLL이 폴더 이름과 일치하지 않는 모드 ID를 등록합니다.
+- `declare_mod!`를 사용하지 않아 DLL이 예상된 진입점을 내보내지 않습니다.
+- 오래된 SDK로 빌드되어 DLL이 예상된 API 버전 심볼을 내보내지 않습니다.
+- Rust 도구 모음 또는 SDK 산출물이 대상 게임 버전과 일치하지 않습니다.
+- 진입 함수에서 패닉이 발생했거나 잘못된 등록값을 반환했습니다.

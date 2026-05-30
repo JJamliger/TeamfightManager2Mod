@@ -1,8 +1,8 @@
-# Recipes
+"tag": "burst"
 
-These snippets are small patterns you can copy into an action `effect`.
+이 코드 조각들은 행동 `effect`에 복사해 넣을 수 있는 작은 형식입니다.
 
-## Basic Target Projectile Attack
+## 기본 대상 투사체 공격
 
 ```json
 {
@@ -22,7 +22,7 @@ These snippets are small patterns you can copy into an action `effect`.
 }
 ```
 
-## Directional Piercing Skill
+## 방향성 관통 기술
 
 ```json
 {
@@ -45,7 +45,7 @@ These snippets are small patterns you can copy into an action `effect`.
 }
 ```
 
-Pair with action fields:
+다음 행동 필드와 함께 사용:
 
 ```json
 {
@@ -56,7 +56,7 @@ Pair with action fields:
 }
 ```
 
-## Self Buff
+## 자신 강화
 
 ```json
 {
@@ -70,7 +70,7 @@ Pair with action fields:
 }
 ```
 
-Pair with:
+다음과 함께 사용:
 
 ```json
 {
@@ -80,7 +80,7 @@ Pair with:
 }
 ```
 
-## Area Ultimate Around Caster
+## 시전자 주변 범위 궁극기
 
 ```json
 {
@@ -102,7 +102,7 @@ Pair with:
 }
 ```
 
-Pair with:
+다음과 함께 사용:
 
 ```json
 {
@@ -113,7 +113,7 @@ Pair with:
 }
 ```
 
-## Dash Then Delayed Hit
+## 돌진 후 지연 타격
 
 ```json
 {
@@ -141,7 +141,7 @@ Pair with:
 }
 ```
 
-## Random Enemy Bolt
+## 무작위 적 번개탄
 
 ```json
 {
@@ -159,7 +159,7 @@ Pair with:
 }
 ```
 
-## Trigger a Registered Visual
+## 등록된 시각 효과 발동
 
 ```json
 {
@@ -168,7 +168,7 @@ Pair with:
 }
 ```
 
-Register the visual in `view_effects`:
+`view_effects`에 해당 시각 효과를 등록:
 
 ```json
 {

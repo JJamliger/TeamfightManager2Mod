@@ -1,14 +1,14 @@
-# Steam Workshop Upload
+# Steam 창작마당 업로드
 
-Teamfight Manager 2 includes `TFM2ModUploader.exe` for publishing mods and database packs to Steam Workshop.
+Teamfight Manager 2에는 모드와 데이터베이스 팩을 Steam 창작마당에 게시하기 위한 `TFM2ModUploader.exe`가 포함되어 있습니다.
 
-Put your package folder together, open the uploader, choose the folder, check the details, and publish.
+패키지 폴더를 준비한 뒤 업로더를 열고, 폴더를 선택하고, 세부 정보를 확인한 다음 게시하십시오.
 
-## Before You Upload
+## 업로드하기 전에
 
-Make sure Steam is running and logged in with the account that should own the Workshop item.
+Steam이 실행 중이며 창작마당 항목을 소유할 계정으로 로그인되어 있는지 확인하십시오.
 
-A normal game mod folder uses `mod.mod_info`:
+일반 게임 모드 폴더는 `mod.mod_info`를 사용합니다:
 
 ```text
 my_mod/
@@ -16,7 +16,7 @@ my_mod/
   thumbnail.png
 ```
 
-A database pack folder uses `database_pack.info` directly in the package folder:
+데이터베이스 팩 폴더는 패키지 폴더 안에 바로 `database_pack.info`를 사용합니다:
 
 ```text
 my_database_pack/
@@ -26,75 +26,75 @@ my_database_pack/
   thumbnail.png
 ```
 
-The database pack folder itself is the upload package. Do not add another required inner `packs/` folder unless your own importer expects that layout after download.
+데이터베이스 팩 폴더 자체가 업로드 패키지입니다. 다운로드 후 자체 가져오기 기능이 해당 구조를 요구하지 않는 한, 필요한 내부 `packs/` 폴더를 추가로 넣지 마십시오.
 
-`mod.mod_info` and `database_pack.info` provide the title, author, version, and description shown by the uploader. `thumbnail.png` can also be used as the Workshop preview image if you do not provide a separate `preview.png`.
+`mod.mod_info`와 `database_pack.info`는 업로더에 표시되는 제목, 작성자, 버전, 설명을 제공합니다. 별도의 `preview.png`를 제공하지 않으면 `thumbnail.png`를 창작마당 미리보기 이미지로 사용할 수도 있습니다.
 
-For the best Workshop page, add:
+더 나은 창작마당 페이지를 위해 다음을 추가하십시오:
 
 ```text
 my_mod/
   preview.png
 ```
 
-`preview.jpg` and `thumbnail.jpg` are also accepted.
+`preview.jpg`와 `thumbnail.jpg`도 사용할 수 있습니다.
 
-## Opening the Uploader
+## 업로더 열기
 
-In the game folder, run:
+게임 폴더에서 다음을 실행하십시오:
 
 ```text
 TFM2ModUploader.exe
 ```
 
-The uploader uses Steam through the same game app, so keep it next to the game executable and Steam DLLs from the game package.
+업로더는 같은 게임 앱을 통해 Steam을 사용하므로, 게임 실행 파일과 게임 패키지의 Steam DLL 옆에 두십시오.
 
-## Viewing Base Game Data
+## 기본 게임 데이터 보기
 
-Packaged game builds keep the base game assets in `bundle.game_data` next to the game executable and uploader.
+패키지된 게임 빌드는 게임 실행 파일과 업로더 옆의 `bundle.game_data`에 기본 게임 자산을 보관합니다.
 
-Use the uploader's **Base Bundle** section when you want to inspect those files while making a mod:
+모드를 제작하면서 해당 파일들을 살펴보려면 업로더의 **Base Bundle** 구역을 사용하십시오:
 
-1. Run `TFM2ModUploader.exe` from the game folder.
-2. Make sure `bundle.game_data` is in the same folder as the uploader.
-3. Click **Unpack Base Bundle**.
+1. 게임 폴더에서 `TFM2ModUploader.exe`를 실행하십시오.
+2. `bundle.game_data`가 업로더와 같은 폴더에 있는지 확인하십시오.
+3. **Unpack Base Bundle**을 클릭하십시오.
 
-The tool creates:
+이 도구는 다음을 생성합니다:
 
 ```text
 mods/base_unpacked/
 ```
 
-The unpacked folder uses the same layout as the game's base asset files. This is separate from the `base` version dependency in `mod.mod_info`. For example, the bundled asset `asset/base/text/ui` is written as:
+압축 해제된 폴더는 게임의 기본 자산 파일과 같은 구조를 사용합니다. 이는 `mod.mod_info`의 `base` 버전 의존성과는 별개입니다. 예를 들어, 묶음 자산 `asset/base/text/ui`는 다음과 같이 작성됩니다:
 
 ```text
 mods/base_unpacked/text/ui.i18n
 ```
 
-Use `base_unpacked` as a read-only reference while building your own mod. Do not edit it as your mod source, because unpacking again will replace that folder.
+- UI 배치 파일
 
-## Publishing a New Package
+- text/i18n 파일
 
-1. Click **Browse** and choose your mod or database pack folder.
-2. Check the package type, name, folder id, author, version, preview image, and Workshop item state.
-3. Choose a visibility:
-   - **Public**: visible to everyone.
-   - **Friends only**: visible to Steam friends.
-   - **Private**: visible only to you.
-   - **Unlisted**: accessible by link, but not listed publicly.
-4. Write a short change note, such as `Initial upload`.
-5. Click **Publish to Steam Workshop**.
+- 썸네일 및 미리보기 이미지
+데이터베이스 팩의 경우 `database_pack.info`와 해당 폴더 안의 일반 파일(하나 이상의 사용자 지정 데이터베이스 팩 파일과 미리보기 이미지 등)이 포함됩니다.
+워크숍 다운로드에 포함되어서는 안 되는 파일은 제외됩니다:
+   - `mod.workshop_id`
+   - **친구만**: Steam 친구에게만 표시됩니다.
+   - **비공개**: 오직 자신에게만 표시됩니다.
+   - **목록 비공개**: 링크로는 접근할 수 있지만 공개 목록에는 표시되지 않습니다.
+4. `최초 업로드`와 같은 짧은 변경 사항 메모를 작성합니다.
+5. **Steam Workshop에 게시**를 클릭합니다.
 
-On the first upload, Steam creates a new Workshop item. The uploader then saves an id file inside your package folder:
+처음 업로드할 때 Steam은 새 Workshop 항목을 생성합니다. 그런 다음 업로더는 패키지 폴더 안에 id 파일을 저장합니다:
 
-- Mods use `mod.workshop_id`.
-- Database packs use `database_pack.workshop_id`.
+- 모드는 `mod.workshop_id`를 사용합니다.
+- 데이터베이스 팩은 `database_pack.workshop_id`를 사용합니다.
 
-Keep that file. It is how the uploader knows which Workshop item to update next time.
+그 파일은 보관하십시오. 업로더가 다음에 어떤 Workshop 항목을 업데이트해야 하는지 알 수 있게 해 주는 파일입니다.
 
-## Updating an Existing Package
+## 기존 패키지 업데이트
 
-After the first upload, the same package folder should contain its Workshop id file:
+처음 업로드한 뒤에는 같은 패키지 폴더에 해당 Workshop id 파일이 들어 있어야 합니다:
 
 ```text
 my_mod/
@@ -103,101 +103,101 @@ my_mod/
 
 ```text
 my_database_pack/
-  database_pack.workshop_id
+database_pack.workshop_id
 ```
 
-Open `TFM2ModUploader.exe`, choose the same folder, write a change note, and click **Update Workshop Item**.
+`TFM2ModUploader.exe`를 열고 같은 폴더를 선택한 뒤, 변경 사항 메모를 작성하고 **Workshop 항목 업데이트**를 클릭합니다.
 
-Do not delete the Workshop id file unless you intentionally want to publish the package as a new Workshop item. If you lose it, you may need to recover the item id from the Workshop page URL and recreate the file.
+패키지를 새 Workshop 항목으로 게시하려는 의도가 아니라면 Workshop id 파일을 삭제하지 마십시오. 이 파일을 잃어버리면 Workshop 페이지 URL에서 항목 id를 찾아 파일을 다시 만들어야 할 수 있습니다.
 
-Example:
+예시:
 
 ```json
 {
-  "published_file_id": 3725617184
+"published_file_id": 3725617184
 }
 ```
 
-## What Gets Uploaded
+## 업로드되는 항목
 
-The uploader prepares a temporary copy of your package and uploads that copy to Steam.
+업로더는 패키지의 임시 복사본을 준비한 다음 그 복사본을 Steam에 업로드합니다.
 
-For mods, it includes normal mod files:
+모드의 경우 일반적인 모드 파일이 포함됩니다:
 
 - `mod.mod_info`
 - `mod.override_info`
-- compiled DLLs
-- JSON and data files
-- PNG/JPG images
-- Aseprite files
-- manual sprite sheet files
-- UI layouts
-- text/i18n files
-- thumbnail and preview images
+- 컴파일된 DLL
+- JSON 및 데이터 파일
+- PNG/JPG 이미지
+- Aseprite 파일
+- 수동 스프라이트 시트 파일
+- UI 레이아웃
+- text/i18n 파일
+- 썸네일 및 미리보기 이미지
 
-For database packs, it includes `database_pack.info` and the normal files in that folder, such as one or more custom database pack files and preview images.
+데이터베이스 팩의 경우 `database_pack.info`와 해당 폴더의 일반 파일(예: 하나 이상의 사용자 지정 데이터베이스 팩 파일과 미리보기 이미지)이 포함됩니다.
 
-It skips files that should not be part of the Workshop download:
+Workshop 다운로드에 포함되면 안 되는 파일은 제외됩니다:
 
 - `mod.workshop_id`
 - `database_pack.workshop_id`
-- `src/` for normal mod packages
+- 일반 모드 패키지의 `src/`
 
-This means native Rust source code is not uploaded. Only the compiled DLL is uploaded.
+이는 네이티브 Rust 소스 코드는 업로드되지 않는다는 뜻입니다. 컴파일된 DLL만 업로드됩니다.
 
-## Database Packs
+## 데이터베이스 팩
 
-Database packs are for Workshop download and sharing. They are not automatically enabled through the in-game Mods menu just because they were downloaded.
+데이터베이스 팩은 Workshop에서 다운로드하고 공유하기 위한 것입니다. 다운로드되었다고 해서 게임 내 모드 메뉴를 통해 자동으로 활성화되지는 않습니다.
 
-Use this structure when you want one Workshop item to contain one or more database files:
+작업장 항목 하나에 하나 이상의 데이터베이스 파일을 담으려면 이 구조를 사용하세요:
 
 ```text
 my_database_pack/
-  database_pack.info
-  league_2026.tfm2db
-  fantasy_rosters.tfm2db
-  preview.png
+database_pack.info
+league_2026.tfm2db
+fantasy_rosters.tfm2db
+preview.png
 ```
 
-`database_pack.info` uses the same basic fields as `mod.mod_info`:
+`database_pack.info`는 `mod.mod_info`와 동일한 기본 필드를 사용합니다:
 
 ```json
 {
-  "name": "2026 League Database Pack",
-  "author": "Your Name",
-  "version": "1.0.0",
-  "description": "Custom databases for the 2026 league setup."
+"name": "2026 리그 데이터베이스 팩",
+"author": "당신의 이름",
+"version": "1.0.0",
+"description": "2026 리그 구성을 위한 사용자 지정 데이터베이스."
 }
 ```
 
-The uploader detects `database_pack.info`, shows the package type as **Database Pack**, and creates or updates a Workshop item for that folder. After the first upload, keep `database_pack.workshop_id` so later uploads update the same item.
+업로더는 `database_pack.info`를 감지하고, 패키지 유형을 **데이터베이스 팩**으로 표시하며, 해당 폴더에 대한 작업장 항목을 생성하거나 갱신합니다. 첫 업로드 후에는 이후 업로드가 동일한 항목을 갱신하도록 `database_pack.workshop_id`를 유지하세요.
 
-## Native Rust Mods and the SDK
+## 네이티브 Rust 모드와 SDK
 
-Most mods do not need the Mod SDK. JSON, image, Aseprite, text, UI, and data-only champion mods can be uploaded with `TFM2ModUploader.exe` alone.
+대부분의 모드는 Mod SDK가 필요하지 않습니다. JSON, 이미지, Aseprite, 텍스트, UI, 그리고 데이터 전용 챔피언 모드는 `TFM2ModUploader.exe`만으로 업로드할 수 있습니다.
 
-Native Rust mods are different. The uploader treats a mod as a code mod when the selected folder contains either:
+네이티브 Rust 모드는 다릅니다. 업로더는 선택한 폴더에 다음 중 하나가 있으면 해당 모드를 코드 모드로 처리합니다:
 
 ```text
 Cargo.toml
 ```
 
-or:
+또는:
 
 ```text
 src/lib.rs
 ```
 
-If **Build native Rust code before uploading** is checked, it tries to build the DLL before uploading.
+**업로드 전에 네이티브 Rust 코드 빌드**가 체크되어 있으면, 업로드 전에 DLL을 빌드하려고 시도합니다.
 
-For that build step, you need:
+그 빌드 단계에는 다음이 필요합니다:
 
-- the matching Teamfight Manager 2 Mod SDK
-- a working Rust toolchain with `cargo` and `rustc`
-- the SDK folder placed next to `TFM2ModUploader.exe`
-- internet access or a populated Cargo cache if your Cargo mod depends on crates.io packages
+- 일치하는 Teamfight Manager 2 Mod SDK
+- `cargo`와 `rustc`가 작동하는 Rust 도구 모음
+- `TFM2ModUploader.exe` 옆에 배치된 SDK 폴더
+- Cargo 모드가 crates.io 패키지에 의존하는 경우 인터넷 접속 또는 채워진 Cargo 캐시
 
-Recommended layout:
+권장 배치:
 
 ```text
 TeamfightManager2.exe
@@ -205,19 +205,19 @@ TFM2ModUploader.exe
 steam_api64.dll
 bundle.game_data
 mod-sdk/
-  deps/
-  native/
-  build_mod.bat
-  build_mod_cargo.ps1
-  rust-toolchain.toml
+deps/
+native/
+build_mod.bat
+build_mod_cargo.ps1
+rust-toolchain.toml
 ```
 
-Build behavior:
+빌드 동작:
 
-- `Cargo.toml` present: the uploader runs a Cargo release build, injects the SDK's prebuilt `mod_api` crate, and supports external crates from normal Cargo dependency sources.
-- Only `src/lib.rs` present: the uploader uses the older direct `rustc` build with only `mod_api` and `std`.
+- `Cargo.toml`이 있는 경우: 업로더는 Cargo 릴리스 빌드를 실행하고, SDK의 사전 빌드된 `mod_api` 크레이트를 주입하며, 일반 Cargo 의존성 소스의 외부 크레이트를 지원합니다.
+- `src/lib.rs`만 있는 경우: 업로더는 `mod_api`와 `std`만 사용하는 구식 직접 `rustc` 빌드를 사용합니다.
 
-For Cargo mods, use a normal library crate:
+Cargo 모드의 경우 일반 라이브러리 크레이트를 사용하세요:
 
 ```toml
 [package]
@@ -232,33 +232,33 @@ crate-type = ["cdylib"]
 rand = "0.8"
 ```
 
-Do not add `mod-api` to `[dependencies]` in the public SDK workflow. The uploader injects the matching SDK build automatically.
+공개 SDK 작업 흐름에서는 `[dependencies]`에 `mod-api`를 추가하지 마세요. 업로더가 일치하는 SDK 빌드를 자동으로 주입합니다.
 
-When the SDK is present, the uploader builds your mod DLL into the selected mod folder, then uploads the finished runtime files. It skips build-only/source paths such as `src/`, `target/`, `Cargo.toml`, and `Cargo.lock`. If you already built the DLL yourself, you can uncheck the build option and upload the existing files.
+SDK가 있으면 업로더는 당신의 모드 DLL을 선택한 모드 폴더에 빌드한 뒤, 완성된 런타임 파일을 업로드합니다. `src/`, `target/`, `Cargo.toml`, `Cargo.lock` 같은 빌드 전용/소스 경로는 건너뜁니다. 이미 DLL을 직접 빌드했다면 빌드 옵션의 선택을 해제하고 기존 파일을 업로드할 수 있습니다.
 
-The SDK should match the game version you are targeting. Rebuild native mods after game updates when a new SDK is released.
-## Managing Workshop Items
+SDK는 대상으로 삼는 게임 버전과 일치해야 합니다. 새 SDK가 배포되어 게임이 갱신되면 네이티브 모드를 다시 빌드하십시오.
+## 워크숍 항목 관리
 
-Use one local package folder as the source of truth for each Workshop item.
+각 워크숍 항목마다 로컬 패키지 폴더 하나를 기준 원본으로 사용하십시오.
 
-Good habits:
+좋은 습관:
 
-- Keep `mod.workshop_id` or `database_pack.workshop_id` in your working copy after the first upload.
-- Update the `version` field in `mod.mod_info` or `database_pack.info` when you make a release.
-- Use clear change notes so subscribers know what changed.
-- Test the mod or database pack locally before publishing an update.
-- Keep a backup or source repository for your package folder.
+- 첫 업로드 후에는 작업 사본에 `mod.workshop_id` 또는 `database_pack.workshop_id`를 유지하십시오.
+- 출시할 때는 `mod.mod_info` 또는 `database_pack.info`의 `version` 필드를 갱신하십시오.
+- 구독자가 무엇이 바뀌었는지 알 수 있도록 변경 사항 메모를 명확히 작성하십시오.
+- 갱신본을 게시하기 전에 모드 또는 데이터베이스 팩을 로컬에서 시험하십시오.
+- 패키지 폴더의 백업 또는 소스 저장소를 유지하십시오.
 
-If you are publishing a template for other people to copy, do not include your Workshop id file. Otherwise their uploads may try to update your Workshop item.
+다른 사람이 복사할 수 있도록 서식을 게시하는 경우에는 당신의 워크숍 id 파일을 포함하지 마십시오. 그렇지 않으면 그들의 업로드가 당신의 워크숍 항목을 갱신하려 할 수 있습니다.
 
-## Steam Legal Agreement
+## Steam 법적 동의
 
-Steam may ask you to accept the Workshop legal agreement before the first upload can finish.
+Steam은 첫 업로드를 완료하기 전에 워크숍 법적 동의에 대한 수락을 요구할 수 있습니다.
 
-Open:
+열기:
 
 ```text
 https://steamcommunity.com/sharedfiles/workshoplegalagreement
 ```
 
-After accepting it, run the upload again.
+수락한 뒤 다시 업로드를 실행하십시오.

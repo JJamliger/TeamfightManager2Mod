@@ -1,110 +1,110 @@
-# Teamfight Manager 2 Modding Guide
+# Teamfight Manager 2 모드 제작 가이드
 
-Welcome to the Teamfight Manager 2 modding guide.
+Teamfight Manager 2 모드 제작 가이드에 오신 것을 환영합니다.
 
-Mods can add new champions, change text and images, replace or merge game assets, add UI pieces, and, for more advanced projects, run custom Rust code through a native DLL.
+모드는 새로운 챔피언을 추가하고, 텍스트와 이미지를 변경하며, 게임 자산을 교체하거나 병합하고, UI 요소를 추가할 수 있으며, 더 고급 프로젝트의 경우 네이티브 DLL을 통해 사용자 지정 Rust 코드를 실행할 수도 있습니다.
 
-If this is your first mod, start with a data-only champion. You can make one with JSON files and image assets, without installing the Mod SDK or compiling code.
+이것이 첫 모드라면 데이터 전용 챔피언부터 시작하세요. Mod SDK를 설치하거나 코드를 컴파일하지 않고도 JSON 파일과 이미지 자산만으로 만들 수 있습니다.
 
-## What You Can Make
+## 만들 수 있는 것
 
-### Data and asset mods
+### 데이터 및 자산 모드
 
-These are the easiest mods to build and share.
+이것들은 제작하고 공유하기 가장 쉬운 모드입니다.
 
-- Add champions with `.data_champion` files.
-- Add custom icons, sprites, UI layouts, and text.
-- Merge new translations into the game's text files.
-- Override existing assets such as sprites or JSON data.
+- `.data_champion` 파일로 챔피언을 추가합니다.
+- 사용자 지정 아이콘, 스프라이트, UI 배치, 텍스트를 추가합니다.
+- 새로운 번역을 게임의 텍스트 파일에 병합합니다.
+- 스프라이트나 JSON 데이터 같은 기존 자산을 덮어씁니다.
 
-You do not need the Mod SDK for this kind of mod.
+이런 종류의 모드에는 Mod SDK가 필요하지 않습니다.
 
-### Database packs
+### 데이터베이스 팩
 
-Database packs are Workshop sharing packages for custom database files. They use `database_pack.info`, can contain one or more database files directly in the package folder, and are downloaded/shared through Steam Workshop without being automatically enabled as in-game mods.
+데이터베이스 팩은 사용자 지정 데이터베이스 파일을 위한 워크숍 공유 꾸러미입니다. `database_pack.info`를 사용하며, 꾸러미 폴더 안에 하나 이상의 데이터베이스 파일을 직접 포함할 수 있고, 게임 내 모드처럼 자동 활성화되지 않은 채 Steam Workshop을 통해 내려받고 공유됩니다.
 
-### Native Rust mods
+### 네이티브 Rust 모드
 
-Native mods are for things that need custom code.
+네이티브 모드는 사용자 지정 코드가 필요한 기능을 위한 것입니다.
 
-- Add champions with custom simulation logic.
-- Add items with runtime callbacks.
-- Add UI or scene behavior through lifecycle hooks.
-- Add server-side management hooks for save/game-state logic.
-- Send client-to-server mod commands and receive server-to-client mod events.
-- Read current save data such as teams, athletes, matches, leagues, and champion info.
-- Adjust ban/pick scoring and replace final player AI inputs.
-- Store custom per-save data for your mod.
-- Expose reusable runtime services that other native mods can depend on.
-- Build deeper experiments that cannot be described with JSON alone.
+- 사용자 지정 시뮬레이션 로직이 있는 챔피언을 추가합니다.
+- 실행 중 호출 함수를 사용하는 아이템을 추가합니다.
+- 생명주기 훅을 통해 UI 또는 장면 동작을 추가합니다.
+- 저장/게임 상태 로직을 위한 서버 측 관리 훅을 추가합니다.
+- 클라이언트에서 서버로 모드 명령을 보내고 서버에서 클라이언트로 모드 이벤트를 받습니다.
+- 팀, 선수, 경기, 리그, 챔피언 정보 같은 현재 저장 데이터를 읽습니다.
+- 밴/픽 점수를 조정하고 최종 플레이어 AI 입력을 교체합니다.
+- 모드를 위한 사용자 지정 저장별 데이터를 저장합니다.
+- 다른 네이티브 모드가 의존할 수 있는 재사용 가능한 실행 중 서비스를 노출합니다.
+- JSON만으로는 설명할 수 없는 더 깊은 실험을 구축합니다.
 
-Native mods need the Mod SDK and should be rebuilt for the game version they target.
+네이티브 모드에는 Mod SDK가 필요하며, 대상 게임 버전에 맞춰 다시 빌드해야 합니다.
 
-## Start Here
+## 여기서 시작하세요
 
-- [Getting Started](docs/getting-started.md)
-- [Mod Package Structure](docs/mod-package.md)
-- [Data-Only Champions](docs/data-champion.md)
-- [Data Champion Schema](docs/data-champion-schema/index.md)
-- [Assets and Sprite Sheets](docs/assets-and-sprite-sheets.md)
-- [Asset Overrides and i18n](docs/asset-overrides-and-i18n.md)
-- [Native Rust Mods](docs/native-rust-mods.md)
-- [Native Mod API Reference](docs/native-mod-api-reference.md)
-- [Native AI Hooks](docs/native-ai-hooks.md)
-- [Mod Save Data](docs/mod-save-data.md)
-- [Workshop Upload](docs/workshop-upload.md)
-- [Troubleshooting](docs/troubleshooting.md)
+- [시작하기](docs/getting-started.md)
+- [모드 꾸러미 구조](docs/mod-package.md)
+- [데이터 전용 챔피언](docs/data-champion.md)
+- [데이터 챔피언 스키마](docs/data-champion-schema/index.md)
+- [자산 및 스프라이트 시트](docs/assets-and-sprite-sheets.md)
+4. 시험하는 동안 기본 게임 스프라이트를 재사용하십시오.
+5. 게임 안에 챔피언이 나타난 뒤에 직접 만든 아이콘과 문구를 추가하십시오.
+6. 완성된 모드를 Steam Workshop에 게시하려면 `TFM2ModUploader.exe`를 사용하십시오.
+7. JSON 효과만으로 부족할 때에만 네이티브 Rust 모드로 넘어가십시오.
+게임은 제목 화면에서 모드 불러오기 문제를 보여 주므로, 무언가 나타나지 않으면 먼저 진단 팝업을 확인하십시오.
+## Steam Workshop에서 공유하기
+일반 업로드 도구는 `TFM2ModUploader.exe`이며, 게임 패키지에 포함되어 있습니다. 이 도구를 사용하면 모드나 데이터베이스 팩 폴더를 선택하고, 해당 메타데이터를 확인하고, Workshop 공개 범위를 선택하고, 변경 메모를 작성하고, Workshop 항목을 게시하거나 갱신할 수 있습니다.
 
-## A Small Mod Folder
+대부분의 모드와 데이터베이스 팩에는 이 업로더만 있으면 됩니다. 모드에 `src/lib.rs` 안의 네이티브 Rust 소스 코드가 포함되어 있다면, 빌드 옵션을 사용하기 전에 업로더 옆에 맞는 Mod SDK를 설치하십시오.
 
-A simple champion mod might look like this:
+간단한 champion 개조판은 다음과 같을 수 있습니다:
 
 ```text
 my_mod/
-  mod.mod_info
-  thumbnail.png
-  champion/
-    my_champion.data_champion
-  text/
-    champion.i18n
-  icons/
-    my_champion_skill.png
-    my_champion_skill2.png
-    my_champion_ult.png
-  champions/
-    my_champion.aseprite
+mod.mod_info
+thumbnail.png
+champion/
+my_champion.data_champion
+text/
+champion.i18n
+icons/
+my_champion_skill.png
+my_champion_skill2.png
+my_champion_ult.png
+champions/
+my_champion.aseprite
 ```
 
-The folder name becomes the mod id. Files inside the folder are referenced as `asset/<mod_id>/...`.
+폴더 이름이 mod id가 됩니다. 폴더 안의 파일은 `asset/<mod_id>/...`로 참조됩니다.
 
-For example:
+예를 들면:
 
 ```text
 mods/my_mod/icons/my_champion_skill.png
 ```
 
-is used as:
+는 다음과 같이 사용됩니다:
 
 ```text
 asset/my_mod/icons/my_champion_skill
 ```
 
-File extensions are left out when writing asset paths.
+asset 경로를 작성할 때는 파일 확장자를 생략합니다.
 
-## Recommended First Steps
+## 권장 첫 단계
 
-1. Create a folder under `mods/`.
-2. Add `mod.mod_info`.
-3. Add one `.data_champion` file.
-4. Reuse a base-game sprite while testing.
-5. Add your own icons and text after the champion appears in-game.
-6. Use `TFM2ModUploader.exe` to publish the finished mod to Steam Workshop.
-7. Move to a native Rust mod only when JSON effects are not enough.
+1. `mods/` 아래에 폴더를 만드십시오.
+2. `mod.mod_info`를 추가하십시오.
+3. `.data_champion` 파일 1개를 추가하십시오.
+4. 시험 중에는 기본 게임 스프라이트를 재사용하십시오.
+5. champion이 게임 안에 표시된 뒤에 직접 만든 아이콘과 글말을 추가하십시오.
+6. 완성된 mod를 Steam Workshop에 게시하려면 `TFM2ModUploader.exe`를 사용하십시오.
+7. JSON 효과만으로 부족할 때에만 네이티브 Rust mod로 옮기십시오.
 
-The game shows mod loading issues on the title screen, so if something does not appear, check the diagnostics popup first.
+게임은 제목 화면에서 mod 불러오기 문제를 표시하므로, 무엇인가 나타나지 않으면 먼저 진단 팝업을 확인하십시오.
 
-## Sharing on Steam Workshop
+## Steam Workshop에서 공유하기
 
-The normal upload tool is `TFM2ModUploader.exe`, included with the game package. It lets you choose a mod or database pack folder, check its metadata, choose Workshop visibility, write a change note, and publish or update the Workshop item.
+일반 업로드 도구는 게임 꾸러미에 포함된 `TFM2ModUploader.exe`입니다. 이 도구를 사용하면 mod 또는 데이터베이스 팩 폴더를 선택하고, 해당 메타데이터를 확인하고, Workshop 공개 범위를 선택하고, 변경 메모를 작성한 뒤, Workshop 항목을 게시하거나 갱신할 수 있습니다.
 
-Most mods and database packs only need this uploader. If your mod contains native Rust source code in `src/lib.rs`, install the matching Mod SDK next to the uploader before using the build option.
+대부분의 mod와 데이터베이스 팩은 이 업로더만 있으면 됩니다. mod에 `src/lib.rs`의 네이티브 Rust 원본 코드가 포함되어 있다면, 빌드 옵션을 사용하기 전에 업로더 옆에 알맞은 Mod SDK를 설치하십시오.

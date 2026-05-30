@@ -1,184 +1,184 @@
-# Troubleshooting
+# 문제 해결
 
-Most mod loading problems are shown in the diagnostics popup on the title screen. Check that first; it usually names the file or DLL that failed.
+대부분의 모드 로딩 문제는 타이틀 화면의 진단 팝업에 표시됩니다. 먼저 그것을 확인하십시오. 보통 실패한 파일이나 DLL의 이름이 나옵니다.
 
-## The Mod Does Not Appear
+## 모드가 표시되지 않음
 
-Check:
+확인 사항:
 
-- The mod folder is under `mods/`.
-- The folder contains `mod.mod_info`.
-- `mod.mod_info` is valid JSON.
-- `version` looks like `0.1.0`.
-- You restarted the game after adding the folder.
+- 모드 폴더가 `mods/` 아래에 있습니다.
+- 폴더에 `mod.mod_info`가 들어 있습니다.
+- `mod.mod_info`가 올바른 JSON입니다.
+- `version`이 `0.1.0`처럼 되어 있습니다.
+- 폴더를 추가한 뒤 게임을 다시 시작했습니다.
 
-## The Mod Appears But Cannot Be Enabled
+## 모드는 표시되지만 활성화할 수 없음
 
-Check dependencies:
+의존성을 확인하십시오:
 
-- The dependency mod is installed.
-- The dependency version matches your requirement.
-- Your `base` version requirement matches the installed game version. `base` refers to the Teamfight Manager 2 game version shown in the lower-right corner of the title screen, not to base-game asset files.
+- 의존 모드가 설치되어 있습니다.
+- 의존 버전이 요구 사항과 일치합니다.
+- `base` 버전 요구 사항이 설치된 게임 버전과 일치합니다. `base`는 베이스 게임 에셋 파일이 아니라, 타이틀 화면 오른쪽 아래에 표시되는 Teamfight Manager 2 게임 버전을 뜻합니다.
 
-Installed dependencies are included automatically when the dependent mod is enabled. If the dependency is installed but the mod still cannot be enabled, check the diagnostics popup for a version mismatch or a load failure in the dependency mod.
+설치된 의존성은 의존 모드를 활성화하면 자동으로 함께 포함됩니다. 의존성이 설치되어 있는데도 모드를 여전히 활성화할 수 없다면, 진단 팝업에서 의존 모드의 버전 불일치 또는 로드 실패를 확인하십시오.
 
-Mod dependency version requirements use semantic versioning. For the special `base` dependency, the major version is `0` during Early Access and `1` for the full release line. Minor versions are for feature, content, data-format, or compatibility changes, while patch versions are for bug-fix-only updates.
+모드 의존성 버전 요구 사항은 시맨틱 버저닝을 사용합니다. 특별한 `base` 의존성의 경우, 메이저 버전은 얼리 액세스 기간에는 `0`, 정식 출시 계열에서는 `1`입니다. 마이너 버전은 기능, 콘텐츠, 데이터 형식 또는 호환성 변경용이며, 패치 버전은 버그 수정만 포함된 업데이트용입니다.
 
-## The Game Disables the Mod
+## 게임이 모드를 비활성화함
 
-The game disables a mod when it cannot safely load it. Common causes:
+게임은 모드를 안전하게 로드할 수 없을 때 해당 모드를 비활성화합니다. 일반적인 원인:
 
-- `mod.mod_info` has invalid JSON.
-- `mod.override_info` has invalid JSON.
-- A native DLL failed to load.
-- A native DLL registered the wrong mod id.
+- `mod.mod_info`에 잘못된 JSON이 있습니다.
+- `mod.override_info`에 잘못된 JSON이 있습니다.
+- 네이티브 DLL 로드에 실패했습니다.
+- 네이티브 DLL이 잘못된 모드 id를 등록했습니다.
 
-Fix the reported issue and restart the game.
+보고된 문제를 수정한 뒤 게임을 다시 시작하십시오.
 
-## Text Shows as Missing or Empty
+## 텍스트가 누락되거나 비어 있는 것으로 표시됨
 
-Check:
+확인 사항:
 
-- Your i18n file is valid JSON.
-- Your `mod.override_info` uses `"type": "merge"`.
-- The target asset path is correct, for example `asset/base/text/champion`.
-- The text lookup matches the JSON path:
+- i18n 파일이 올바른 JSON입니다.
+- `mod.override_info`가 `"type": "merge"`를 사용합니다.
+- 대상 에셋 경로가 올바릅니다. 예: `asset/base/text/champion`
+- 텍스트 조회가 JSON 경로와 일치합니다:
 
 ```text
 #asset/base/text/champion?description.my_mod_fire_mage.skill
 ```
 
-## Images Do Not Load
+## 이미지가 로드되지 않음
 
-Check:
+확인 사항:
 
-- Asset paths do not include file extensions.
-- The file is inside the mod folder.
-- Spelling and capitalization match.
-- Skill icons point to a valid PNG asset or sprite sheet tag.
-- If you use a sheet tag, both `source#sheet` and `source#data` exist.
-- If you wrote `.sprite_sheet` JSON by hand, the rectangles are normalized values from `0.0` to `1.0`.
+- 에셋 경로에는 파일 확장자를 포함하지 않습니다.
+- 파일이 모드 폴더 안에 있습니다.
+- 철자와 대소문자가 일치합니다.
+- 스킬 아이콘이 올바른 PNG 에셋 또는 스프라이트 시트 태그를 가리킵니다.
+- 시트 태그를 사용하는 경우 `source#sheet`와 `source#data`가 모두 존재합니다.
+- `.sprite_sheet` JSON을 직접 작성한 경우, 사각형은 `0.0`부터 `1.0`까지의 정규화 값입니다.
 
-## Aseprite Sprites Do Not Animate
+## Aseprite 스프라이트가 재생되지 않음
 
-Check:
+확인 사항:
 
-- The `.aseprite` file has sprite user data with `"sheet_type": "Animation"` or `"sheet_type": "LayeredAnimation"`.
-- The Aseprite timeline tags match the champion action names, such as `idle`, `attack`, `skill`, `skill2`, and `ult`.
-- The layer names in the Aseprite user data match the actual layer names.
-- A data champion using an animated source has `anim_prefix` set. Use `""` when the tags should be copied as-is.
-- If you use a prefixed source, the tags really have that prefix, for example `eagle_idle` with `"anim_prefix": "eagle_"`.
+- `.aseprite` 파일의 스프라이트 사용자 데이터에 `"sheet_type": "Animation"` 또는 `"sheet_type": "LayeredAnimation"`이 있습니다.
+- Aseprite 타임라인 태그가 `idle`, `attack`, `skill`, `skill2`, `ult`와 같은 챔피언 동작 이름과 일치합니다.
+- Aseprite 사용자 데이터의 레이어 이름이 실제 레이어 이름과 일치합니다.
+- 애니메이션 소스를 사용하는 데이터 챔피언에는 `anim_prefix`가 설정되어 있습니다. 태그를 그대로 복사해야 하는 경우 `""`를 사용하십시오.
+- 접두사가 있는 소스를 사용하는 경우 태그에 실제로 해당 접두사가 있습니다. 예: `"anim_prefix": "eagle_"`일 때 `eagle_idle`.
 
-## A Sprite Sheet Tag Shows the Wrong Image
+## 스프라이트 시트 태그가 잘못된 이미지를 표시함
 
-Check:
+확인 사항:
 
-- The tag name in JSON matches the tag in the sheet data.
-- Manual `.sprite_sheet` rectangles use normalized values, not pixels.
-- Manual `.fanim` rectangles use pixel values, not normalized values.
-- Aseprite `Sheet` and `PackedSheet` tags are named `<layer_name>_<frame_number>`, such as `fire_skill_0`.
+- JSON의 태그 이름이 시트 데이터의 태그와 일치합니다.
+- 수동 `.sprite_sheet` 사각형은 픽셀이 아니라 정규화 값을 사용합니다.
+- 수동 `.fanim` 사각형은 정규화 값이 아니라 픽셀 값을 사용합니다.
+- Aseprite `Sheet` 및 `PackedSheet` 태그의 이름은 `fire_skill_0`와 같은 `<layer_name>_<frame_number>` 형식입니다.
 
-## A Data Champion Does Not Work
+## 데이터 챔피언이 작동하지 않음
 
-Check:
+확인 사항:
 
-- The file extension is `.data_champion`.
-- The champion has `attack`, `skill`, and `skill2`.
-- Enum values are spelled exactly, such as `Targeting`, `Enemy`, and `BaseAttack`.
-- The champion `id` is unique.
-- Description keys point to text that has been merged into i18n.
-- If `sprite` points to an animated source, `anim_prefix` is present.
-- If `sprite` points to a PNG, `anim_prefix` is not needed.
+- 파일 확장자는 `.data_champion`입니다.
+- 챔피언에는 `attack`, `skill`, `skill2`가 있습니다.
+- 열거형 값의 철자가 `Targeting`, `Enemy`, `BaseAttack`처럼 정확히 일치합니다.
+- 챔피언 `id`는 고유합니다.
+- 설명 키는 i18n에 병합된 텍스트를 가리킵니다.
+- `sprite`가 애니메이션 소스를 가리키는 경우 `anim_prefix`가 존재합니다.
+- `sprite`가 PNG를 가리키는 경우 `anim_prefix`는 필요하지 않습니다.
 
-## A Native DLL Does Not Load
+## 네이티브 DLL이 로드되지 않음
 
-Check:
+확인 사항:
 
-- The DLL is in the mod folder.
-- The DLL exports `tfm2_mod_entry` by using `declare_mod!`.
-- `ModRegistration::new("...")` uses the same id as the mod folder.
-- The DLL was built with the matching Mod SDK.
-- The DLL targets Windows x86_64 MSVC.
-- The DLL was built for the game version you are running.
-- The DLL was built from the same profile you are testing. Use a release DLL with the release game package.
-- If diagnostics mention an API version symbol or version mismatch, rebuild with the current Mod SDK.
+- DLL이 모드 폴더 안에 있습니다.
+- DLL은 `declare_mod!`를 사용하여 `tfm2_mod_entry`를 내보냅니다.
+- `ModRegistration::new("...")`는 모드 폴더와 동일한 id를 사용합니다.
+- DLL은 일치하는 Mod SDK로 빌드되었습니다.
+- DLL의 대상은 Windows x86_64 MSVC입니다.
+- DLL은 현재 실행 중인 게임 버전에 맞게 빌드되었습니다.
+- DLL은 현재 테스트 중인 것과 동일한 프로필에서 빌드되었습니다. 릴리스 게임 패키지에는 릴리스 DLL을 사용하십시오.
+- 진단에 API 버전 심볼 또는 버전 불일치가 언급되면 현재 Mod SDK로 다시 빌드하십시오.
 
-## A Native AI Hook Does Not Run
+## 네이티브 AI 훅이 실행되지 않음
 
-Check:
+확인 사항:
 
-- The native DLL loads without diagnostics errors.
-- The hook is registered in `ModRegistration` with `add_draft_score_hook` or `add_player_input_ai`.
-- The mod is enabled and the game was restarted after replacing the DLL.
-- `ModPlayerInputAi::matches()` returns `true` for the player you expect.
-- The hook's `priority()` is not being overridden by a later higher-priority hook.
-- A returned player `Input` is valid for the current frame. Invalid replacement inputs are ignored.
-- The behavior is being observed in a simulation that uses `GameRunner`, such as a match or title-screen simulated match.
+- 네이티브 DLL이 진단 오류 없이 로드됩니다.
+- 훅이 `ModRegistration`에 `add_draft_score_hook` 또는 `add_player_input_ai`로 등록되어 있습니다.
+- 모드가 활성화되어 있으며 DLL 교체 후 게임을 다시 시작했습니다.
+- `ModPlayerInputAi::matches()`가 예상한 플레이어에 대해 `true`를 반환합니다.
+- 훅의 `priority()`가 더 나중에 등록된 더 높은 우선순위 훅에 의해 덮어씌워지지 않습니다.
+- 반환된 플레이어 `Input`이 현재 프레임에서 유효합니다. 유효하지 않은 대체 입력은 무시됩니다.
+- 동작은 경기 또는 타이틀 화면 시뮬레이션 경기처럼 `GameRunner`를 사용하는 시뮬레이션에서 관찰되고 있습니다.
 
-For player input AI, start by returning `PlayerInputDecision::Pass` until your trigger condition is true, then use helpers such as `ctx.get_run_away_input()`, `ctx.get_recall_input()`, and `ctx.is_safe_to_recall()` before constructing manual inputs.
+플레이어 입력 AI의 경우, 먼저 트리거 조건이 참이 될 때까지 `PlayerInputDecision::Pass`를 반환한 다음, 수동 입력을 구성하기 전에 `ctx.get_run_away_input()`, `ctx.get_recall_input()`, `ctx.is_safe_to_recall()` 같은 도우미를 사용하십시오.
 
-## Reading Game Data Fails to Compile
+## 게임 데이터 읽기 컴파일 실패
 
-Check:
+확인 사항:
 
-- You are using a current Mod SDK. Older SDKs may not expose the newest `ClientData` lookup helpers.
-- Your code runs from a `ModExtension` and first matches `Scene::InGame { data }`.
-- The ID exists in the current save. Lookup helpers return `None` when the data is not present on the client.
-- You let returned `Ref<'_, T>` values go out of scope before calling APIs that need a mutable client data borrow, such as mod save-data writes.
-- If you need a type name in annotations, import it from `mod_api::*`; common internal types such as `Athlete`, `Team`, `MatchInfo`, `League`, `Tournament`, and `ChampionInfo` are re-exported.
+- 현재 Mod SDK를 사용하고 있습니다. 오래된 SDK는 최신 `ClientData` 조회 도우미를 제공하지 않을 수 있습니다.
+- 코드가 `ModExtension`에서 실행되며 먼저 `Scene::InGame { data }`와 일치합니다.
+- ID가 현재 저장 데이터에 존재합니다. 조회 도우미는 클라이언트에 데이터가 없으면 `None`을 반환합니다.
+- 모드 저장 데이터 쓰기처럼 가변 클라이언트 데이터 대여가 필요한 API를 호출하기 전에, 반환된 `Ref<'_, T>` 값이 범위를 벗어나도록 했습니다.
+- 주석에 타입 이름이 필요하다면 `mod_api::*`에서 가져오십시오. `Athlete`, `Team`, `MatchInfo`, `League`, `Tournament`, `ChampionInfo` 같은 일반적인 내부 타입은 다시 내보내집니다.
 
-## Mod Save Data Does Not Persist
+## 모드 저장 데이터가 유지되지 않음
 
-Check:
+확인 사항:
 
-- The native DLL loads without diagnostics errors.
-- You access save data from an in-game scene, usually `Scene::InGame { data }`.
-- Your `mod_id` matches the mod folder name and `ModRegistration::new(...)`.
-- Write helpers such as `mod_save_set_string` return `true`.
-- The key and mod id are non-empty, under 128 bytes, and contain no NUL bytes.
-- The value is not larger than 1 MiB.
-- In multiplayer league saves, the host is the one writing the value.
-- You are not clearing the namespace or overwriting the value every frame.
+- 네이티브 DLL이 진단 오류 없이 로드됩니다.
+- 저장 데이터는 게임 내 장면, 보통 `Scene::InGame { data }`에서 접근합니다.
+- `mod_id`가 모드 폴더 이름 및 `ModRegistration::new(...)`와 일치합니다.
+- `mod_save_set_string` 같은 쓰기 도우미가 `true`를 반환합니다.
+- 키와 mod id는 비어 있지 않고, 128바이트 미만이며, NUL 바이트를 포함하지 않습니다.
+- 값 크기는 1 MiB를 넘지 않습니다.
+- 멀티플레이어 리그 저장에서는 호스트가 값을 기록합니다.
+- 네임스페이스를 지우거나 값을 매 프레임마다 덮어쓰고 있지 않습니다.
 
-Remember that mod save data is stored in the game save. After writing a value, use the normal save/autosave flow and reload the same save slot to test persistence.
+모드 저장 데이터는 게임 저장 파일에 저장된다는 점을 기억하십시오. 값을 작성한 후에는 일반 저장/자동저장 흐름을 사용하고 동일한 저장 슬롯을 다시 불러와 지속 여부를 시험하십시오.
 
-## A Native Service Dependency Does Not Work
+## 기본 서비스 종속성이 작동하지 않음
 
-If a native mod depends on another native mod's runtime service, check:
+기본 모드가 다른 기본 모드의 실행 시간 서비스에 의존하는 경우, 다음을 확인하십시오:
 
-- The provider mod is listed in the consumer's `mod.mod_info` dependencies.
-- The provider mod is installed.
-- The provider DLL loads without diagnostics errors.
-- The provider calls `GameCtx::register_service` during its entry function.
-- The consumer uses the correct provider mod id, service id, and version requirement.
-- The provider and consumer use the same `#[repr(C)]` service vtable layout.
+- 제공자 모드가 소비자의 `mod.mod_info` 종속성에 나열되어 있습니다.
+- 제공자 모드가 설치되어 있습니다.
+- 제공자 DLL이 진단 오류 없이 불러와집니다.
+- 제공자가 진입 함수 동안 `GameCtx::register_service`를 호출합니다.
+- 소비자가 올바른 제공자 모드 id, 서비스 id, 버전 요구 사항을 사용합니다.
+- 제공자와 소비자가 동일한 `#[repr(C)]` 서비스 vtable 배치를 사용합니다.
 
-If the consumer has a fallback path, it may still load but behave differently. For example, an item price that should include a provider bonus may stay at its fallback value when service lookup fails.
+소비자에게 대체 경로가 있으면 여전히 불러와질 수는 있지만 다르게 동작할 수 있습니다. 예를 들어, 제공자 보너스가 포함되어야 하는 물품 가격이 서비스 조회에 실패하면 대체 값에 머물 수 있습니다.
 
-## Workshop Upload Fails
+## 창작마당 올리기 실패
 
-Check:
+확인 사항:
 
-- Steam is running.
-- `TFM2ModUploader.exe` is running from the game folder, next to the Steam DLLs.
-- You have access to the game app.
-- You accepted the Steam Workshop legal agreement if Steam asks for it.
-- `mod.mod_info` parses correctly.
-- `preview.png`, `preview.jpg`, `thumbnail.png`, or `thumbnail.jpg`, if present, is a valid image.
-- If you are updating an existing item, `mod.workshop_id` still points to the correct Workshop item.
-- Native Rust mods have the matching Mod SDK installed before using the build option.
+- 스팀이 실행 중입니다.
+- `TFM2ModUploader.exe`가 스팀 DLL 옆의 게임 폴더에서 실행 중입니다.
+- 당신은 게임 앱에 접근 권한이 있습니다.
+- 스팀이 요구하면 스팀 창작마당 법적 동의에 동의했습니다.
+- `mod.mod_info`가 올바르게 구문 분석됩니다.
+- `preview.png`, `preview.jpg`, `thumbnail.png`, 또는 `thumbnail.jpg`가 있을 경우 올바른 그림 파일입니다.
+- 기존 항목을 갱신하는 경우 `mod.workshop_id`가 여전히 올바른 창작마당 항목을 가리킵니다.
+- 기본 Rust 모드는 빌드 선택 사항을 사용하기 전에 일치하는 Mod SDK가 설치되어 있습니다.
 
-If the mod already has a compiled DLL and you only want to upload it, uncheck **Build native Rust code before uploading**.
+모드에 이미 컴파일된 DLL이 있고 그것만 올리고 싶다면 **올리기 전에 기본 Rust 코드 빌드**를 선택 해제하십시오.
 
-## Native Build Fails in the Uploader
+## 올리기 도구에서 기본 빌드 실패
 
-Check:
+확인 사항:
 
-- The matching Mod SDK is next to `TFM2ModUploader.exe`.
-- `mod-sdk/deps` contains the prebuilt `mod-api` files.
-- Rust is installed and both `cargo` and `rustc` can run.
-- The mod has either `Cargo.toml` or `src/lib.rs`.
-- If using external crates, Cargo can download them or they already exist in your Cargo cache.
-- If the mod is inside another Cargo workspace, add an empty `[workspace]` table to the mod's `Cargo.toml` or move it outside that workspace.
-- Do not add `mod-api` to `[dependencies]` for the public SDK build path; the uploader injects the matching prebuilt `mod_api` crate.
-- The SDK version matches the game version you are targeting.
+- 일치하는 Mod SDK가 `TFM2ModUploader.exe` 옆에 있습니다.
+- `mod-sdk/deps`에 사전 빌드된 `mod-api` 파일이 들어 있습니다.
+- Rust가 설치되어 있으며 `cargo`와 `rustc`가 모두 실행될 수 있습니다.
+- 모드에 `Cargo.toml` 또는 `src/lib.rs`가 있습니다.
+- 외부 크레이트를 사용하는 경우 Cargo가 그것들을 내려받을 수 있거나 이미 Cargo 캐시에 존재합니다.
+- 모드가 다른 Cargo 작업 공간 안에 있다면 빈 `[workspace]` 표를 모드의 `Cargo.toml`에 추가하거나 그 작업 공간 밖으로 옮기십시오.
+- 공개 SDK 빌드 경로에서는 `[dependencies]`에 `mod-api`를 추가하지 마십시오. 업로더가 일치하는 사전 빌드된 `mod_api` 크레이트를 주입합니다.
+- SDK 버전은 대상 게임 버전과 일치합니다.

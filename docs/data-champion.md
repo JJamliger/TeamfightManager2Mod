@@ -1,26 +1,26 @@
-# Data-Only Champions
+# 데이터 전용 챔피언
 
-Data-only champions are the best place to start. They are JSON files with the `.data_champion` extension, and they let you add a playable champion without writing Rust code.
+데이터 전용 챔피언은 시작하기에 가장 좋은 지점입니다. 이들은 `.data_champion` 확장자를 가진 JSON 파일이며, Rust 코드를 작성하지 않고도 플레이 가능한 챔피언을 추가할 수 있게 해줍니다.
 
-Place them anywhere under the mod folder, commonly:
+모드 폴더 아래의 어느 위치에 두어도 되며, 일반적으로는 다음과 같습니다:
 
 ```text
 mods/my_mod/champion/fire_mage.data_champion
 ```
 
-The game sees that file as this asset path:
+게임은 해당 파일을 다음 에셋 경로로 인식합니다:
 
 ```text
 asset/my_mod/champion/fire_mage
 ```
 
-## Full Schema Reference
+## 전체 스키마 참조
 
-This page is a tutorial-style example. For every field, enum value, effect type, visual binding, and patchable field, see [Data Champion Schema](data-champion-schema/index.md).
+이 페이지는 튜토리얼 형식의 예시입니다. 각 필드, enum 값, 효과 유형, 시각 바인딩, 패치 가능한 필드에 대해서는 [데이터 챔피언 스키마](data-champion-schema/index.md)를 참조하십시오.
 
-## Example Champion
+## 예시 챔피언
 
-The example below defines a ranged magic champion with a basic attack, two skills, an ultimate, skill icons, and projectile visuals.
+아래 예시는 기본 공격, 두 개의 기술, 궁극기, 기술 아이콘, 투사체 시각 효과를 갖춘 원거리 마법 챔피언을 정의합니다.
 
 ```json
 {
@@ -181,41 +181,41 @@ The example below defines a ranged magic champion with a basic attack, two skill
 }
 ```
 
-## Top-Level Fields
+## 최상위 필드
 
-- `id`: Unique champion id. Keep it stable after release because saves and patches may refer to it.
-- `category`: `Melee`, `Range`, `Magician`, `Util`, or `Assassin`.
-- `tags`: Any of `AD`, `AP`, `Heal`, `Shield`, `Dot`, `CC`, `Range`, `Melee`, `Tank`, `Magic`.
-- `stat`: Base level 1 stats.
-- `growth`: Per-level stat growth.
-- `attack`, `skill`, `skill2`, `ult`: Required actions.
-- `sprite`: Optional asset path for the champion visual. This can be a PNG, an Aseprite asset, or a manual `#sheet` plus `#anim` animation pair.
-- `anim_prefix`: Used with animated sprite sources. Set it to `""` to keep animation tags as-is, or to a prefix such as `"eagle_"` to strip that prefix from tags.
-- `skill_icon`: Optional shared icon sheet definition. Use this when skill, skill2, and ult icons are packed into one sheet with tags.
-- `skill_icons`: Optional list of three direct icon asset paths for skill, skill2, and ult. Use this when each icon is its own PNG.
-- `view_effects`, `view_projectiles`, `view_buffs`: Optional view bindings.
+- `id`: 고유한 챔피언 id입니다. 저장 데이터와 패치가 이를 참조할 수 있으므로 출시 후에도 안정적으로 유지해야 합니다.
+- `category`: `Melee`, `Range`, `Magician`, `Util`, 또는 `Assassin`.
+- `tags`: `AD`, `AP`, `Heal`, `Shield`, `Dot`, `CC`, `Range`, `Melee`, `Tank`, `Magic` 중 하나입니다.
+- `stat`: 레벨 1 기본 능력치입니다.
+- `growth`: 레벨당 능력치 성장치입니다.
+- `attack`, `skill`, `skill2`, `ult`: 필수 행동입니다.
+- `sprite`: 챔피언 시각 요소에 사용하는 선택적 에셋 경로입니다. PNG, Aseprite 에셋 또는 수동 `#sheet` 와 `#anim` 애니메이션 쌍이 될 수 있습니다.
+- `anim_prefix`: 애니메이션 스프라이트 원본과 함께 사용됩니다. 애니메이션 태그를 그대로 유지하려면 `""`로 설정하고, `"eagle_"` 같은 접두어를 제거하려면 해당 접두어로 설정합니다.
+- `skill_icon`: 선택적 공용 아이콘 시트 정의입니다. skill, skill2, ult 아이콘이 태그와 함께 하나의 시트에 묶여 있을 때 사용합니다.
+- `skill_icons`: 선택적 3개의 직접 아이콘 에셋 경로 목록입니다. 각 아이콘이 개별 PNG일 때 사용합니다.
+- `view_effects`, `view_projectiles`, `view_buffs`: 선택적 화면 바인딩입니다.
 
-## Action Fields
+## 행동 필드
 
-- `action_name`: Animation tag to play, such as `attack`, `skill`, `skill2`, or `ult`.
-- `duration`: Total action duration in simulation ticks.
-- `cooltime`: Cooldown in ticks.
-- `start_timing`: Tick inside the action when the effect fires.
-- `cancelable`: Whether the action can be interrupted.
-- `range`: Base cast range.
-- `growth_range`: Additional range per level.
-- `casting_type`: `Targeting`, `Position`, `Direction`, or `None`.
-- `casting_target`: See target list below.
-- `attack_type`: `BaseAttack`, `Skill`, `Dot`, `DotIgnoreShield`, `Item`, or `Well`.
-- `can_use_with_move`: Whether the action can be used while moving.
-- `description`: i18n key or plain string.
-- `effect`: Effect definition.
+- `action_name`: `attack`, `skill`, `skill2`, `ult` 같은 재생할 애니메이션 태그입니다.
+- `duration`: 시뮬레이션 틱 기준 전체 행동 지속 시간입니다.
+- `cooltime`: 틱 기준 재사용 대기시간입니다.
+- `start_timing`: 행동 중 효과가 발동하는 틱입니다.
+- `cancelable`: 행동이 중단될 수 있는지 여부입니다.
+- `range`: 기본 시전 거리입니다.
+- `growth_range`: 레벨당 추가 거리입니다.
+- `casting_type`: `Targeting`, `Position`, `Direction`, 또는 `None`.
+- `casting_target`: 아래 대상 목록을 참고하십시오.
+- `attack_type`: `BaseAttack`, `Skill`, `Dot`, `DotIgnoreShield`, `Item`, 또는 `Well`.
+- `can_use_with_move`: 이동 중에도 행동을 사용할 수 있는지 여부입니다.
+- `description`: i18n 키 또는 일반 문자열입니다.
+- `effect`: 효과 정의입니다.
 
-## Animation Tags
+## 애니메이션 태그
 
-`action_name` is both a gameplay action name and a visual lookup key. When an action starts, the champion renderer tries to play an animation tag with the same name.
+`action_name`은 게임플레이 행동 이름이면서 동시에 시각 조회 키이기도 합니다. 행동이 시작되면 챔피언 렌더러는 같은 이름의 애니메이션 태그를 재생하려고 시도합니다.
 
-Common champion tags are:
+일반적인 챔피언 태그는 다음과 같습니다:
 
 ```text
 idle
@@ -227,7 +227,7 @@ ult
 dead
 ```
 
-If your `skill` action uses:
+당신의 `skill` 동작이 다음을 사용한다면:
 
 ```json
 {
@@ -235,13 +235,13 @@ If your `skill` action uses:
 }
 ```
 
-then the sprite's animation data should also have a `fire_cast` tag. In Aseprite, that means a timeline tag named `fire_cast`. In a manual `.fanim` file, that means an entry under `anims.fire_cast`.
+그러면 스프라이트의 애니메이션 데이터에도 `fire_cast` 태그가 있어야 합니다. Aseprite에서는 타임라인 태그 이름이 `fire_cast`여야 합니다. 수동 `.fanim` 파일에서는 `anims.fire_cast` 아래에 항목이 있어야 한다는 뜻입니다.
 
-Use the familiar names first unless you need a special animation. A missing tag usually means the champion loads but does not show the expected animation during that action.
+특별한 애니메이션이 필요한 경우가 아니라면 먼저 익숙한 이름을 사용하십시오. 태그가 없으면 챔피언은 불러와지더라도 해당 동작 중에 기대한 애니메이션이 표시되지 않는 경우가 많습니다.
 
-## Common Targets
+## 일반 대상
 
-Useful `casting_target` values:
+유용한 `casting_target` 값:
 
 - `Enemy`
 - `EnemyWithoutTower`
@@ -255,24 +255,24 @@ Useful `casting_target` values:
 - `BothChampion`
 - `None`
 
-## Effect Types
+## 효과 유형
 
-Data champions can use these effect types:
+데이터 챔피언은 다음 효과 유형을 사용할 수 있습니다:
 
-- Damage and healing: `Attack`, `ApAttack`, `FixedAttack`, `Heal`, `Shield`.
-- Crowd control: `Stun`, `Airborne`, `Knockback`, `Grab`, `Pull`, `Fear`, `Charm`, `Bind`, `Taunt`, `BlockAttack`, `BlockSkill`, `BlockMoveSkill`, `Invisible`, `Banish`.
-- Movement: `Rush`, `RushTime`, `Teleport`, `DirTeleport`, `MoveBack`, `MoveTo`, `MoveToTarget`, `RushMoveToBack`.
-- Projectiles: `LinearProjectile`, `TargetProjectile`, `TargetSplashProjectile`, `AutoTargetProjectile`, `RangeProjectile`, `ParabolicProjectile`, `BackToCasterLinearProjectile`, `TargetProjectileFromProjectile`, `LineRangeProjectile`, `RangePeriodProjectile`, `ApplyInProjectile`.
-- Area and barriers: `RangeEffect`, `ShrinkingBarrier`.
-- Buffs and casted effects: `AddBuff`, `AddCasterBuff`, `RemoveCasterBuff`, `AddCasted`.
-- Composition and branching: `Combine`, `Delayed`, `WithSelf`, `RandomTarget`, `SwitchByBuff`, `SwitchByLevel3`.
-- Visual/audio triggers: `ViewEffect`, `CasterViewEffect`, `CasterAnimation`, `RemoveCasterAnimation`, `Sfx`, `TargetSfx`.
+- 피해 및 회복: `Attack`, `ApAttack`, `FixedAttack`, `Heal`, `Shield`.
+- 군중 제어: `Stun`, `Airborne`, `Knockback`, `Grab`, `Pull`, `Fear`, `Charm`, `Bind`, `Taunt`, `BlockAttack`, `BlockSkill`, `BlockMoveSkill`, `Invisible`, `Banish`.
+- 이동: `Rush`, `RushTime`, `Teleport`, `DirTeleport`, `MoveBack`, `MoveTo`, `MoveToTarget`, `RushMoveToBack`.
+- 투사체: `LinearProjectile`, `TargetProjectile`, `TargetSplashProjectile`, `AutoTargetProjectile`, `RangeProjectile`, `ParabolicProjectile`, `BackToCasterLinearProjectile`, `TargetProjectileFromProjectile`, `LineRangeProjectile`, `RangePeriodProjectile`, `ApplyInProjectile`.
+- 범위 및 장벽: `RangeEffect`, `ShrinkingBarrier`.
+- 버프 및 시전 효과: `AddBuff`, `AddCasterBuff`, `RemoveCasterBuff`, `AddCasted`.
+- 조합 및 분기: `Combine`, `Delayed`, `WithSelf`, `RandomTarget`, `SwitchByBuff`, `SwitchByLevel3`.
+- 시각/음향 트리거: `ViewEffect`, `CasterViewEffect`, `CasterAnimation`, `RemoveCasterAnimation`, `Sfx`, `TargetSfx`.
 
-This page only summarizes the common groups. For exact fields and nested examples for every effect type, use [Effect Schema](data-champion-schema/effects.md).
+이 페이지는 일반적인 묶음만 요약합니다. 각 효과 유형의 정확한 필드와 중첩 예시는 [Effect Schema](data-champion-schema/effects.md)를 사용하십시오.
 
-## Shapes
+## 형태
 
-Projectile and range effects use `ProjectileShape`:
+투사체 및 범위 효과는 `ProjectileShape`를 사용합니다:
 
 ```json
 { "Circle": { "radius": 10000 } }
@@ -286,21 +286,21 @@ Projectile and range effects use `ProjectileShape`:
 { "DirDot": { "radius": 8000, "range": 700 } }
 ```
 
-`Line` is also supported, but it requires explicit endpoints and is usually less convenient for authored champion data.
+`Line`도 지원되지만, 명시적인 끝점이 필요하며 작성된 챔피언 데이터에는 보통 덜 편리합니다.
 
-## Text
+## 텍스트
 
-Descriptions usually point to i18n keys:
+설명은 보통 i18n 키를 가리킵니다:
 
 ```json
 "#asset/base/text/champion?description.my_mod_fire_mage.skill"
 ```
 
-Add those keys through an i18n merge. See [Asset Overrides and i18n](asset-overrides-and-i18n.md).
+i18n 병합을 통해 해당 키를 추가하십시오. [Asset Overrides and i18n](asset-overrides-and-i18n.md)을 참조하십시오.
 
-## Sprite Binding
+## 스프라이트 바인딩
 
-The `sprite` field is written without `#sheet` or `#anim`:
+`sprite` 필드는 `#sheet` 또는 `#anim` 없이 작성합니다:
 
 ```json
 {
@@ -308,11 +308,11 @@ The `sprite` field is written without `#sheet` or `#anim`:
 }
 ```
 
-The game decides how to bind it based on what exists at that path.
+게임은 해당 경로에 존재하는 항목을 기준으로 이를 어떻게 바인딩할지 결정합니다.
 
-### Static PNG
+### 정적 PNG
 
-If `sprite` points to a PNG, do not set `anim_prefix`:
+`sprite`가 PNG를 가리키는 경우 `anim_prefix`를 설정하지 마십시오:
 
 ```json
 {
@@ -320,15 +320,15 @@ If `sprite` points to a PNG, do not set `anim_prefix`:
 }
 ```
 
-The whole image is used as a one-frame sprite. The game creates simple fallback animations for `idle`, `attack`, `skill`, `skill2`, `ult`, `dead`, and `run`.
+전체 이미지가 1프레임 스프라이트로 사용됩니다. 게임은 `idle`, `attack`, `skill`, `skill2`, `ult`, `dead`, `run`에 대해 단순한 대체 애니메이션을 생성합니다.
 
-This is useful while testing a champion. It is not ideal for a finished animated champion.
+이는 챔피언을 시험하는 동안 유용합니다. 완성된 애니메이션 챔피언에는 이상적이지 않습니다.
 
-### Animated Aseprite or Manual Animation Sheet
+### 애니메이션 Aseprite 또는 수동 애니메이션 시트
 
-If `sprite` points to an Aseprite animation or to a manual `#sheet` plus `#anim` pair, set `anim_prefix`.
+`sprite`가 Aseprite 애니메이션 또는 수동 `#sheet`와 `#anim` 쌍을 가리키는 경우 `anim_prefix`를 설정하십시오.
 
-Use an empty string when the tags already match the standard champion tags:
+태그가 이미 표준 챔피언 태그와 일치하는 경우 빈 문자열을 사용하십시오:
 
 ```json
 {
@@ -337,9 +337,9 @@ Use an empty string when the tags already match the standard champion tags:
 }
 ```
 
-This keeps tags such as `idle`, `attack`, `skill`, and `ult` unchanged.
+이렇게 하면 `idle`, `attack`, `skill`, `ult` 같은 태그가 변경되지 않은 채 유지됩니다.
 
-Use a real prefix when one source file contains several variants. For example:
+하나의 원본 파일에 여러 변형이 들어 있는 경우 실제 접두사를 사용하십시오. 예를 들면:
 
 ```json
 {
@@ -348,17 +348,17 @@ Use a real prefix when one source file contains several variants. For example:
 }
 ```
 
-The source tags `eagle_idle`, `eagle_attack`, and `eagle_ult` become `idle`, `attack`, and `ult` for the new champion.
+원본 태그 `eagle_idle`, `eagle_attack`, `eagle_ult`는 새 챔피언에서 `idle`, `attack`, `ult`가 됩니다.
 
-Tags without the prefix are also kept. That lets a shared source file contain common tags that every variant can use.
+접두사가 없는 태그도 함께 유지됩니다. 이렇게 하면 공유 원본 파일에 모든 변형이 사용할 수 있는 공통 태그를 담을 수 있습니다.
 
-For a full explanation of `#sheet`, `#anim`, Aseprite metadata, and manual PNG/JSON sprite sheets, see [Assets and Sprite Sheets](assets-and-sprite-sheets.md).
+`#sheet`, `#anim`, Aseprite 메타데이터, 수동 PNG/JSON 스프라이트 시트에 대한 전체 설명은 [Assets and Sprite Sheets](assets-and-sprite-sheets.md)를 참조하십시오.
 
-## Skill Icons
+## 스킬 아이콘
 
-There are two ways to define skill, skill2, and ult icons.
+skill, skill2, ult 아이콘을 정의하는 방법은 두 가지입니다.
 
-Use `skill_icons` when each icon is its own PNG:
+각 아이콘이 개별 PNG일 때는 `skill_icons`를 사용하십시오:
 
 ```json
 {
@@ -370,7 +370,7 @@ Use `skill_icons` when each icon is its own PNG:
 }
 ```
 
-Use `skill_icon` when the icons are packed into one sprite sheet:
+아이콘이 하나의 스프라이트 시트로 묶여 있을 때는 `skill_icon`을 사용하십시오:
 
 ```json
 {
@@ -381,11 +381,11 @@ Use `skill_icon` when the icons are packed into one sprite sheet:
 }
 ```
 
-In the second form, the game looks for:
+두 번째 형식에서는, 게임이 다음을 찾습니다:
 
 ```text
 asset/example/icons/fire_skills#sheet
 asset/example/icons/fire_skills#data
 ```
 
-and then draws the tagged rectangles from that sheet.
+그리고 해당 시트에서 태그된 사각형을 그립니다.

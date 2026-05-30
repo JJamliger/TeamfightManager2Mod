@@ -1,23 +1,23 @@
-# Patchable Fields
+# 패치 가능 필드
 
-Data champion actions implement the game's `PatchableFields` interface. This means some values can be read and adjusted by patch/balance systems.
+데이터 챔피언 행동은 게임의 `PatchableFields` 인터페이스를 구현합니다. 이는 일부 값을 패치/밸런스 계통에서 읽고 조정할 수 있음을 의미합니다.
 
-## Action-Level Fields
+## 행동 단계 필드
 
-Every `DataActionDef` exposes:
+모든 `DataActionDef`는 다음을 노출합니다:
 
 ```text
-cooltime
-range
-duration
-start_timing
+cooltime //재사용 대기시간
+range //원거리
+duration //지속시간
+start_timing //시작 시점
 ```
 
-## Effect-Level Fields
+## 효과 단계 필드
 
-The action also exposes some fields from its effect.
+해당 행동은 또한 그 효과의 일부 필드도 노출합니다.
 
-| Effect | Patchable fields |
+| 효과 | 패치 가능 필드 |
 | --- | --- |
 | `Attack` | `damage`, `attack_ratio`, `hp_ratio`, `target_hp_ratio` |
 | `ApAttack` | `damage`, `attack_ratio`, `hp_ratio` |
@@ -33,13 +33,13 @@ The action also exposes some fields from its effect.
 | `Taunt` | `duration` |
 | `Rush` | `speed`, `range` |
 | `LinearProjectile` | `speed`, `range` |
-| `Combine` | fields from the first child effect only |
+| `Combine` | 첫 번째 하위 효과의 필드만 |
 
-Effects not listed here can still work in gameplay, but they do not currently expose patchable numeric fields through this interface.
+여기에 나열되지 않은 효과도 게임플레이에서는 여전히 작동할 수 있지만, 현재 이 인터페이스를 통해 패치 가능한 숫자 필드를 노출하지는 않습니다.
 
-## Patch Type Name
+## 패치 유형 이름
 
-The patch type name for a data action is its `action_name`. Prefer stable names:
+데이터 행동의 패치 유형 이름은 해당 `action_name`입니다. 안정적인 이름을 우선 사용하십시오:
 
 ```text
 attack
@@ -48,4 +48,4 @@ skill2
 ult
 ```
 
-Changing `action_name` after release can affect patch/balance references and animation lookup, so treat it like a stable id.
+출시 후 `action_name`을 변경하면 패치/밸런스 참조 및 애니메이션 조회에 영향을 줄 수 있으므로, 안정적인 id처럼 취급하십시오.

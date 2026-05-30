@@ -1,42 +1,42 @@
-# Native Mod API Reference
+# Native Mod API 참고 문서
 
-This page lists the Rust API exported by the `mod_api` crate for native DLL mods.
-Most mods start with:
+이 페이지에는 네이티브 DLL 모드를 위해 `mod_api` 크레이트에서 내보내는 Rust API가 나열되어 있습니다.
+대부분의 모드는 다음과 같이 시작합니다:
 
 ```rust
 use mod_api::*;
 ```
 
-The API version described here is `API_VERSION == (0, 7)`. Native DLLs are SDK-version-bound: rebuild the DLL when the game SDK changes.
+여기에서 설명하는 API 버전은 `API_VERSION == (0, 7)`입니다. 네이티브 DLL은 SDK 버전에 종속되므로 게임 SDK가 변경되면 DLL을 다시 빌드해야 합니다.
 
-## Top-Level Export Map
+## 최상위 내보내기 맵
 
-`mod_api` re-exports these modules:
+`mod_api`는 다음 모듈을 다시 내보냅니다:
 
-- Registration and entry points from `registration`.
-- Native content traits from `traits`.
-- Simulation access wrappers from `game_ctx`.
-- Opaque handles from `handles`.
-- Client lifecycle hooks and UI/scene types from `extension`.
-- Selected game value types from `game-core`.
+- `registration`의 등록 및 진입점.
+- `traits`의 네이티브 콘텐츠 트레이트.
+- `game_ctx`의 시뮬레이션 접근 래퍼.
+- `handles`의 불투명 핸들.
+- `extension`의 클라이언트 생명주기 훅 및 UI/장면 형식.
+- `game-core`의 일부 게임 값 형식.
 
-For large game data structures such as `Team`, `Athlete`, `MatchInfo`, and `ChampionInfoSheet`, the exported type is the real game type from the matching SDK. Use the SDK version that matches the target game.
+`Team`, `Athlete`, `MatchInfo`, `ChampionInfoSheet`와 같은 대규모 게임 데이터 구조의 경우, 내보내는 형식은 일치하는 SDK의 실제 게임 형식입니다. 대상 게임과 일치하는 SDK 버전을 사용하십시오.
 
-## Registration
+## 등록
 
-### Constants and Types
+### 상수 및 형식
 
-| Item | Signature |
+| 항목 | 시그니처 |
 | --- | --- |
-| `API_VERSION` | `(u32, u32)`, currently `(0, 7)` |
-| `API_VERSION_ENCODED` | `u64` encoded as `major << 32 | minor` |
+| `API_VERSION` | `(u32, u32)`, 현재 `(0, 7)` |
+| `API_VERSION_ENCODED` | `major << 32 | minor`로 인코딩된 `u64` |
 | `MOD_ENTRY_SYMBOL` | `"tfm2_mod_entry"` |
 | `MOD_API_VERSION_SYMBOL` | `"tfm2_mod_api_version"` |
 | `ModEntryFn` | `unsafe extern "C" fn(api: *const GameCtx) -> *mut ModRegistration` |
 | `ModApiVersionFn` | `unsafe extern "C" fn() -> u64` |
 | `decode_api_version(raw)` | `fn decode_api_version(raw: u64) -> (u32, u32)` |
 
-Use `declare_mod!(init_fn)` to export both DLL symbols:
+`declare_mod!(init_fn)`을 사용하여 두 DLL 심볼을 모두 내보냅니다:
 
 ```rust
 fn init(ctx: &GameCtx) -> ModRegistration {
@@ -50,9 +50,9 @@ declare_mod!(init);
 
 ### `ModRegistration`
 
-Fields:
+항목:
 
-| Field | Type |
+| 필드 | 형식 |
 | --- | --- |
 | `mod_id` | `String` |
 | `api_version` | `(u32, u32)` |
@@ -63,9 +63,9 @@ Fields:
 | `extension` | `Option<Box<dyn ModExtension>>` |
 | `server_extension` | `Option<Box<dyn ModServerExtension>>` |
 
-Methods:
+메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `new` | `fn new(mod_id: impl Into<String>) -> Self` |
 | `add_champion` | `fn add_champion(&mut self, info: impl ModChampionInfo + 'static)` |
@@ -75,49 +75,49 @@ Methods:
 | `set_extension` | `fn set_extension(&mut self, ext: impl ModExtension + 'static)` |
 | `set_server_extension` | `fn set_server_extension(&mut self, ext: impl ModServerExtension + 'static)` |
 
-## Champion and Combat Traits
+## 챔피언 및 전투 특성
 
 ### `ModChampionInfo`
 
-Defines one champion.
+하나의 챔피언을 정의합니다.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `id` | `fn id(&self) -> &str` | required |
+| `id` | `fn id(&self) -> &str` | 필수 |
 | `name` | `fn name(&self) -> &str` | `self.id()` |
-| `skill_icon` | `fn skill_icon(&self, skill_index: usize) -> (String, String)` | `skill_icon` sheet and `{id}_{index}` tag |
-| `category` | `fn category(&self) -> ChampionCategory` | required |
-| `tags` | `fn tags(&self) -> Vec<ChampionTag>` | required |
-| `stat` | `fn stat(&self) -> EntityStat` | required |
-| `growth` | `fn growth(&self) -> EntityStat` | required |
-| `attack` | `fn attack(&self) -> Box<dyn ModAction>` | required |
-| `skill` | `fn skill(&self) -> Box<dyn ModAction>` | required |
-| `skill2` | `fn skill2(&self) -> Box<dyn ModAction>` | required |
+| `skill_icon` | `fn skill_icon(&self, skill_index: usize) -> (String, String)` | `skill_icon` 시트 및 `{id}_{index}` 태그 |
+| `category` | `fn category(&self) -> ChampionCategory` | 필수 |
+| `tags` | `fn tags(&self) -> Vec<ChampionTag>` | 필수 |
+| `stat` | `fn stat(&self) -> EntityStat` | 필수 |
+| `growth` | `fn growth(&self) -> EntityStat` | 필수 |
+| `attack` | `fn attack(&self) -> Box<dyn ModAction>` | 필수 |
+| `skill` | `fn skill(&self) -> Box<dyn ModAction>` | 필수 |
+| `skill2` | `fn skill2(&self) -> Box<dyn ModAction>` | 필수 |
 | `ult` | `fn ult(&self) -> Option<Box<dyn ModAction>>` | `None` |
 | `passive` | `fn passive(&self) -> Option<Box<dyn ModPassive>>` | `None` |
 
 ### `ModAction`
 
-Defines an action used by a champion: attack, skill, skill2, or ult.
+챔피언이 사용하는 행동을 정의합니다: attack, skill, skill2 또는 ult.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `clone_box` | `fn clone_box(&self) -> Box<dyn ModAction>` | required |
+| `clone_box` | `fn clone_box(&self) -> Box<dyn ModAction>` | 필수 |
 | `action_name` | `fn action_name(&self) -> &str` | `"attack"` |
-| `duration` | `fn duration(&self) -> usize` | required |
+| `duration` | `fn duration(&self) -> usize` | 필수 |
 | `cancelable` | `fn cancelable(&self) -> bool` | `false` |
-| `cooltime` | `fn cooltime(&self, caster_stat: &EntityStat, caster_level: usize) -> usize` | required |
-| `casting_target` | `fn casting_target(&self) -> CastingTarget` | required |
-| `effect` | `fn effect(&self) -> Option<ModEffect>` | required |
+| `cooltime` | `fn cooltime(&self, caster_stat: &EntityStat, caster_level: usize) -> usize` | 필수 |
+| `casting_target` | `fn casting_target(&self) -> CastingTarget` | 필수 |
+| `effect` | `fn effect(&self) -> Option<ModEffect>` | 필수 |
 | `cooltime_use_count` | `fn cooltime_use_count(&self, caster_stat: &EntityStat) -> usize` | `1` |
 | `can_use_with_move` | `fn can_use_with_move(&self) -> bool` | `false` |
-| `description` | `fn description(&self) -> String` | empty string |
+| `description` | `fn description(&self) -> String` | 없음 |
 
 ### `ModEffect`
 
-Returned by `ModAction::effect()`.
+`ModAction::effect()`가 반환합니다.
 
-| Field | Type |
+| 필드 | 형식 |
 | --- | --- |
 | `range` | `u64` |
 | `growth_range` | `u64` |
@@ -129,11 +129,11 @@ Returned by `ModAction::effect()`.
 
 ### `ModEffectType`
 
-Defines what an effect does when it fires.
+효과가 발동할 때 무엇을 수행하는지 정의합니다.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `apply` | `fn apply(&self, ctx: &mut GameCtx, rng_seed: u64, caster_id: usize, input: InputTarget)` | required |
+| `apply` | `fn apply(&self, ctx: &mut GameCtx, rng_seed: u64, caster_id: usize, input: InputTarget)` | 필수 |
 | `expected_damage` | `fn expected_damage(&self, caster_stat: &EntityStat) -> (usize, usize)` | `(0, 0)` |
 | `expected_heal` | `fn expected_heal(&self, caster_stat: &EntityStat) -> usize` | `0` |
 | `expected_shield` | `fn expected_shield(&self, caster_stat: &EntityStat) -> usize` | `0` |
@@ -148,63 +148,63 @@ Defines what an effect does when it fires.
 
 ### `ModPassive`
 
-Optional champion passive. Implement `clone_box` because the engine clones runtime instances.
+선택형 챔피언 패시브입니다. 엔진이 런타임 인스턴스를 복제하므로 `clone_box`를 구현해야 합니다.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `clone_box` | `fn clone_box(&self) -> Box<dyn ModPassive>` | required |
-| `on_spawn` | `fn on_spawn(&mut self, ctx: &mut GameCtx, player: usize, entity: usize)` | no-op |
-| `on_attack` | `fn on_attack(&mut self, ctx: &mut GameCtx, player: usize, entity: usize, target: usize, damage: &mut usize)` | no-op |
-| `on_damaged` | `fn on_damaged(&mut self, ctx: &mut GameCtx, player: usize, entity: usize, attacker: usize, damage: usize)` | no-op |
-| `on_kill` | `fn on_kill(&mut self, ctx: &mut GameCtx, player: usize, entity: usize)` | no-op |
-| `on_update` | `fn on_update(&mut self, ctx: &mut GameCtx, rng_seed: u64, player: usize, entity: usize)` | no-op |
-| `on_base_attack` | `fn on_base_attack(&mut self, ctx: &mut GameCtx, rng_seed: u64, player: usize, entity: usize)` | no-op |
-| `on_assist` | `fn on_assist(&mut self, ctx: &mut GameCtx, player: usize, entity: usize)` | no-op |
-| `on_dead` | `fn on_dead(&mut self, ctx: &mut GameCtx, player: usize)` | no-op |
+| `clone_box` | `fn clone_box(&self) -> Box<dyn ModPassive>` | 필수 |
+| `on_spawn` | `fn on_spawn(&mut self, ctx: &mut GameCtx, player: usize, entity: usize)` | 아무 동작 안 함 |
+| `on_attack` | `fn on_attack(&mut self, ctx: &mut GameCtx, player: usize, entity: usize, target: usize, damage: &mut usize)` | 아무 동작 안 함 |
+| `on_damaged` | `fn on_damaged(&mut self, ctx: &mut GameCtx, player: usize, entity: usize, attacker: usize, damage: usize)` | 동작 없음 |
+| `on_kill` | `fn on_kill(&mut self, ctx: &mut GameCtx, player: usize, entity: usize)` | 동작 없음 |
+| `on_update` | `fn on_update(&mut self, ctx: &mut GameCtx, rng_seed: u64, player: usize, entity: usize)` | 동작 없음 |
+| `on_base_attack` | `fn on_base_attack(&mut self, ctx: &mut GameCtx, rng_seed: u64, player: usize, entity: usize)` | 동작 없음 |
+| `on_assist` | `fn on_assist(&mut self, ctx: &mut GameCtx, player: usize, entity: usize)` | 동작 없음 |
+| `on_dead` | `fn on_dead(&mut self, ctx: &mut GameCtx, player: usize)` | 동작 없음 |
 
 ### `ModEffectBuff`
 
-Custom persistent buff logic type. It is part of the API surface, but it is not registered directly through `ModRegistration`.
+사용자 지정 지속형 버프 로직 유형입니다. API 표면의 일부이지만, `ModRegistration`을 통해 직접 등록되지는 않습니다.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `on_damaged` | `fn on_damaged(&self, ctx: &mut GameCtx, attacker: usize, target: usize, damage: &mut usize, attack_type: AttackType)` | no-op |
-| `update` | `fn update(&mut self, ctx: &mut GameCtx, rng_seed: u64)` | required |
-| `is_end` | `fn is_end(&self, ctx: &GameCtx) -> bool` | required |
+| `on_damaged` | `fn on_damaged(&self, ctx: &mut GameCtx, attacker: usize, target: usize, damage: &mut usize, attack_type: AttackType)` | 동작 없음 |
+| `update` | `fn update(&mut self, ctx: &mut GameCtx, rng_seed: u64)` | 필수 |
+| `is_end` | `fn is_end(&self, ctx: &GameCtx) -> bool` | 필수 |
 
-## Item Trait
+## 아이템 트레이트
 
 ### `ModItemInfo`
 
-Defines an item and its runtime callbacks. Implement `clone_box` because the game creates independent runtime instances.
+아이템과 해당 런타임 콜백을 정의합니다. 게임이 서로 독립적인 런타임 인스턴스를 생성하므로 `clone_box`를 구현해야 합니다.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `clone_box` | `fn clone_box(&self) -> Box<dyn ModItemInfo>` | required |
-| `key` | `fn key(&self) -> &str` | required |
+| `clone_box` | `fn clone_box(&self) -> Box<dyn ModItemInfo>` | 필수 |
+| `key` | `fn key(&self) -> &str` | 필수 |
 | `icon` | `fn icon(&self) -> &str` | `self.key()` |
-| `price` | `fn price(&self) -> usize` | required |
-| `tier` | `fn tier(&self) -> usize` | required |
-| `stat` | `fn stat(&self) -> BuffState` | required |
-| `next_tier` | `fn next_tier(&self) -> Vec<String>` | empty |
-| `previous_tier` | `fn previous_tier(&self) -> Vec<String>` | empty |
-| `tags` | `fn tags(&self) -> Vec<ItemTag>` | empty |
+| `price` | `fn price(&self) -> usize` | 필수 |
+| `tier` | `fn tier(&self) -> usize` | 필수 |
+| `stat` | `fn stat(&self) -> BuffState` | 필수 |
+| `next_tier` | `fn next_tier(&self) -> Vec<String>` | 없음 |
+| `previous_tier` | `fn previous_tier(&self) -> Vec<String>` | 없음 |
+| `tags` | `fn tags(&self) -> Vec<ItemTag>` | 없음 |
 | `category` | `fn category(&self) -> ItemCategory` | `ItemCategory::default()` |
-| `on_attack` | `fn on_attack(&mut self, ctx: &mut GameCtx, caster: usize, target: usize, damage: &mut usize, damage_type: DamageType)` | no-op |
-| `update` | `fn update(&mut self, ctx: &mut GameCtx, rng_seed: u64, player: usize)` | no-op |
-| `on_spawn` | `fn on_spawn(&mut self, ctx: &mut GameCtx, player: usize)` | no-op |
-| `on_healed` | `fn on_healed(&mut self, ctx: &mut GameCtx, caster: Option<usize>, entity: usize, heal: usize)` | no-op |
-| `on_damaged` | `fn on_damaged(&mut self, ctx: &mut GameCtx, player: usize, entity: usize, attacker: usize, damage: usize)` | no-op |
-| `on_kill` | `fn on_kill(&mut self, ctx: &mut GameCtx, rng_seed: u64, player: usize, entity: usize)` | no-op |
-| `on_skill_hit` | `fn on_skill_hit(&mut self, ctx: &mut GameCtx, rng_seed: u64, caster: usize, target: usize)` | no-op |
+| `on_attack` | `fn on_attack(&mut self, ctx: &mut GameCtx, caster: usize, target: usize, damage: &mut usize, damage_type: DamageType)` | 동작 없음 |
+| `update` | `fn update(&mut self, ctx: &mut GameCtx, rng_seed: u64, player: usize)` | 동작 없음 |
+| `on_spawn` | `fn on_spawn(&mut self, ctx: &mut GameCtx, player: usize)` | 동작 없음 |
+| `on_healed` | `fn on_healed(&mut self, ctx: &mut GameCtx, caster: Option<usize>, entity: usize, heal: usize)` | 동작 없음 |
+| `on_damaged` | `fn on_damaged(&mut self, ctx: &mut GameCtx, player: usize, entity: usize, attacker: usize, damage: usize)` | 동작 없음 |
+| `on_kill` | `fn on_kill(&mut self, ctx: &mut GameCtx, rng_seed: u64, player: usize, entity: usize)` | 동작 없음 |
+| `on_skill_hit` | `fn on_skill_hit(&mut self, ctx: &mut GameCtx, rng_seed: u64, caster: usize, target: usize)` | 동작 없음 |
 
-## Simulation Context
+## 시뮬레이션 맥락
 
-### Handles
+### 핸들
 
-These are opaque pointer wrappers. Handles are only valid during the callback in which they were obtained. Do not store them.
+이는 불투명 포인터 래퍼입니다. 핸들은 획득된 콜백 동안에만 유효합니다. 저장하지 마십시오.
 
-| Type | Methods |
+| 유형 | 메서드 |
 | --- | --- |
 | `EntityHandle` | `null()`, `is_null()`, `unsafe from_ptr(ptr)`, `as_ptr()` |
 | `PlayerHandle` | `null()`, `is_null()`, `unsafe from_ptr(ptr)`, `as_ptr()` |
@@ -212,18 +212,18 @@ These are opaque pointer wrappers. Handles are only valid during the callback in
 
 ### `GameCtx`
 
-`GameCtx` is the main handle passed to native callbacks.
+`GameCtx`는 네이티브 콜백에 전달되는 주된 핸들입니다.
 
-Runtime service methods:
+실행 환경 서비스 메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `register_service` | `fn register_service(&self, service_id: &str, version: ModServiceVersion, service: ModService) -> bool` |
 | `query_service` | `fn query_service(&self, provider_mod_id: &str, service_id: &str, version_req: &str) -> Option<ModService>` |
 
-Simulation query methods:
+시뮬레이션 조회 메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `tick` | `fn tick(&self) -> usize` |
 | `seed` | `fn seed(&self) -> u64` |
@@ -246,27 +246,27 @@ Simulation query methods:
 | `distance_sq` | `fn distance_sq(&self, id1: usize, id2: usize) -> u64` |
 | `is_visible` | `fn is_visible(&self, team: usize, id: usize) -> bool` |
 
-Simulation mutation methods:
+시뮬레이션 변경 메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `deal_damage` | `fn deal_damage(&mut self, attacker: usize, target: usize, ad: usize, ap: usize, attack_type: AttackType)` |
 | `heal` | `fn heal(&mut self, caster: usize, target: usize, amount: usize)` |
 | `add_buff` | `fn add_buff(&mut self, target: usize, buff: BuffState)` |
 | `apply_cc` | `fn apply_cc(&mut self, target: usize, cc: CCState)` |
 
-Debug draw methods:
+디버그 그리기 메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `debug_draw_line` | `fn debug_draw_line(&mut self, x1: u64, y1: u64, x2: u64, y2: u64, color: u32)` |
 | `debug_draw_circle` | `fn debug_draw_circle(&mut self, x: u64, y: u64, r: u64, color: u32)` |
 
-Colors are packed `u32` values. Existing examples use values such as `0xff66ccff`.
+색상은 압축된 `u32` 값입니다. 기존 예시에서는 `0xff66ccff`와 같은 값을 사용합니다.
 
 ### `EntityRef`
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `handle` | `fn handle(&self) -> EntityHandle` |
 | `id` | `fn id(&self) -> usize` |
@@ -289,7 +289,7 @@ Colors are packed `u32` values. Existing examples use values such as `0xff66ccff
 
 ### `PlayerRef`
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `handle` | `fn handle(&self) -> PlayerHandle` |
 | `champion` | `fn champion(&self) -> Option<EntityRef<'_>>` |
@@ -306,14 +306,14 @@ Colors are packed `u32` values. Existing examples use values such as `0xff66ccff
 
 ### `ProjectileRef`
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `handle` | `fn handle(&self) -> ProjectileHandle` |
 | `info` | `fn info(&self) -> ProjectileInfo` |
 
-### Return Structs
+### 반환 구조체
 
-| Type | Fields |
+| 유형 | 필드 |
 | --- | --- |
 | `EntityPos` | `x: u64`, `y: u64` |
 | `EntityHp` | `current: usize`, `max: usize` |
@@ -321,17 +321,17 @@ Colors are packed `u32` values. Existing examples use values such as `0xff66ccff
 | `ProjectileInfo` | `x: u64`, `y: u64`, `caster_id: usize`, `team: usize`, `is_end: bool` |
 | `KillLogEntry` | `tick: usize`, `killer_team: usize`, `killer_position: u32`, `killed_position: u32`, `assist_count: u32`, `assist_positions: [u32; 4]` |
 
-`CCInfo::cc_type` currently uses: `0=Airborne`, `1=Stun`, `2=Bind`, `3=BlockAttack`, `4=BlockSkill`, `5=BlockMoveSkill`, `6=ForceMove`, `7=Taunt`, `8=Fear`, `9=Animation`, `255=Invalid`.
+`CCInfo::cc_type`는 현재 다음을 사용합니다: `0=Airborne`, `1=Stun`, `2=Bind`, `3=BlockAttack`, `4=BlockSkill`, `5=BlockMoveSkill`, `6=ForceMove`, `7=Taunt`, `8=Fear`, `9=Animation`, `255=Invalid`.
 
-## Runtime Services
+## 런타임 서비스
 
-Runtime services let one native mod publish an opaque vtable and another native mod query it.
+런타임 서비스는 한 네이티브 모드가 불투명한 vtable을 게시하고 다른 네이티브 모드가 이를 조회할 수 있게 합니다.
 
 ### `ModServiceVersion`
 
-Fields: `major: u32`, `minor: u32`, `patch: u32`.
+필드: `major: u32`, `minor: u32`, `patch: u32`.
 
-Method:
+메서드:
 
 ```rust
 pub const fn new(major: u32, minor: u32, patch: u32) -> Self
@@ -339,44 +339,44 @@ pub const fn new(major: u32, minor: u32, patch: u32) -> Self
 
 ### `ModService`
 
-Fields:
+항목:
 
-| Field | Type |
+| 필드 | 형식 |
 | --- | --- |
 | `data` | `*mut c_void` |
 | `vtable` | `*const c_void` |
 
-Methods:
+메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `null` | `pub const fn null() -> Self` |
 | `from_raw` | `pub const fn from_raw(data: *mut c_void, vtable: *const c_void) -> Self` |
 | `is_null` | `pub fn is_null(&self) -> bool` |
 | `vtable` | `pub unsafe fn vtable<T>(&self) -> Option<&T>` |
 
-Use a shared `#[repr(C)]` vtable contract between provider and consumer mods. `query_service` accepts semver requirement strings such as `">=1.0.0, <2.0.0"`.
+공급자 모드와 소비자 모드 사이에서 공유 `#[repr(C)]` vtable 계약을 사용합니다. `query_service`는 `">=1.0.0, <2.0.0"`와 같은 semver 요구사항 문자열을 받습니다.
 
-## AI Hooks
+## AI 훅
 
 ### `ModDraftScoreHook`
 
-Adjusts ban/pick candidate scores after the base draft AI scores them.
+기본 드래프트 AI가 ban/pick 후보 점수를 매긴 뒤, 그 점수를 조정합니다.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `id` | `fn id(&self) -> &str` | required |
+| `id` | `fn id(&self) -> &str` | 필수 |
 | `priority` | `fn priority(&self) -> i32` | `0` |
 | `score_ban` | `fn score_ban(&self, ctx: &DraftScoreContext, candidate: usize, base_score: f32) -> DraftScoreDecision` | `Pass` |
 | `score_pick` | `fn score_pick(&self, ctx: &DraftScoreContext, candidate: usize, base_score: f32) -> DraftScoreDecision` | `Pass` |
 
-Lower priorities run first; higher priorities run later and see the score after earlier hooks.
+낮은 우선순위가 먼저 실행되며, 높은 우선순위는 나중에 실행되어 앞선 훅이 반영한 점수를 확인합니다.
 
 ### `DraftScoreContext`
 
-Fields:
+필드:
 
-| Field | Type |
+| 필드 | 형식 |
 | --- | --- |
 | `phase` | `DraftScorePhase` |
 | `available_champions` | `&[usize]` |
@@ -387,7 +387,7 @@ Fields:
 | `is_explore` | `bool` |
 | `difficulty` | `Difficulty` |
 
-Related enums:
+관련 enum:
 
 ```rust
 pub enum DraftScorePhase {
@@ -404,15 +404,15 @@ pub enum DraftScoreDecision {
 
 ### `ModPlayerInputAi`
 
-Replaces the final per-tick `Input` produced by the built-in player AI.
+기본 제공 플레이어 AI가 tick마다 생성하는 최종 `Input`을 대체합니다.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `clone_box` | `fn clone_box(&self) -> Box<dyn ModPlayerInputAi>` | required |
-| `id` | `fn id(&self) -> &str` | required |
+| `clone_box` | `fn clone_box(&self) -> Box<dyn ModPlayerInputAi>` | 필수 |
+| `id` | `fn id(&self) -> &str` | 필수 |
 | `priority` | `fn priority(&self) -> i32` | `0` |
 | `matches` | `fn matches(&self, ctx: &PlayerAiInitContext) -> bool` | `true` |
-| `think` | `fn think(&mut self, ctx: &mut PlayerAiContext<'_, '_, '_>, base_input: Option<Input>) -> PlayerInputDecision` | required |
+| `think` | `fn think(&mut self, ctx: &mut PlayerAiContext<'_, '_, '_>, base_input: Option<Input>) -> PlayerInputDecision` | 필수 |
 
 `PlayerInputDecision`:
 
@@ -425,9 +425,9 @@ pub enum PlayerInputDecision {
 
 ### `PlayerAiInitContext`
 
-Fields:
+팔드:
 
-| Field | Type |
+| 필드 | 형식 |
 | --- | --- |
 | `player_id` | `usize` |
 | `athlete_id` | `usize` |
@@ -437,7 +437,7 @@ Fields:
 
 ### `PlayerAiContext`
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `player_id` | `fn player_id(&self) -> usize` |
 | `athlete_id` | `fn athlete_id(&self) -> usize` |
@@ -455,11 +455,11 @@ Fields:
 | `get_recall_input` | `fn get_recall_input(&mut self) -> Option<Input>` |
 | `is_safe_to_recall` | `fn is_safe_to_recall(&mut self) -> bool` |
 
-## Client Extension API
+## 클라이언트 확장 API
 
-### Re-Exported Client and UI Types
+### 다시 내보낸 클라이언트 및 UI 형식
 
-`mod_api` re-exports:
+`mod_api` 다시 내보내기:
 
 - `Assets`
 - `RenderState`
@@ -473,7 +473,7 @@ Fields:
 - `ClientData`
 - `ClientDatabase`
 
-Alias:
+별칭:
 
 ```rust
 pub type GameUI = UI<(), UIOutEvent>;
@@ -481,38 +481,38 @@ pub type GameUI = UI<(), UIOutEvent>;
 
 ### `ModExtension`
 
-Lifecycle hooks called on the client/game-loop side.
+클라이언트/게임 루프 측에서 호출되는 생명주기 훅.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `on_init` | `fn on_init(&self, scene: &mut Scene, ui: &mut GameUI, assets: &mut Assets)` | no-op |
-| `pre_update` | `fn pre_update(&self, scene: &mut Scene, ui: &mut GameUI, assets: &mut Assets, dt: f32)` | no-op |
-| `post_update` | `fn post_update(&self, scene: &mut Scene, ui: &mut GameUI, assets: &mut Assets, dt: f32)` | no-op |
-| `pre_render` | `fn pre_render(&self, scene: &Scene, ui: &GameUI, assets: &Assets, state: &mut RenderState)` | no-op |
-| `post_render` | `fn post_render(&self, scene: &Scene, ui: &GameUI, assets: &Assets, state: &mut RenderState)` | no-op |
-| `on_end` | `fn on_end(&self, assets: &Assets)` | no-op |
+| `on_init` | `fn on_init(&self, scene: &mut Scene, ui: &mut GameUI, assets: &mut Assets)` | 동작 없음 |
+| `pre_update` | `fn pre_update(&self, scene: &mut Scene, ui: &mut GameUI, assets: &mut Assets, dt: f32)` | 동작 없음 |
+| `post_update` | `fn post_update(&self, scene: &mut Scene, ui: &mut GameUI, assets: &mut Assets, dt: f32)` | 동작 없음 |
+| `pre_render` | `fn pre_render(&self, scene: &Scene, ui: &GameUI, assets: &Assets, state: &mut RenderState)` | 동작 없음 |
+| `post_render` | `fn post_render(&self, scene: &Scene, ui: &GameUI, assets: &Assets, state: &mut RenderState)` | 동작 없음 |
+| `on_end` | `fn on_end(&self, assets: &Assets)` | 동작 없음 |
 
-Use `Scene::InGame { data }` to access `ClientData` during normal management gameplay.
+일반 운영 플레이 중 `ClientData`에 접근하려면 `Scene::InGame { data }`를 사용하십시오.
 
 ### `ClientData`
 
-Fields:
+필드:
 
-| Field | Type |
+| 필드 | 형식 |
 | --- | --- |
 | `db` | `Rc<RefCell<ClientDatabase>>` |
 | `main_tutorial` | `Option<MainTutorial>` |
 
-Borrow helpers:
+대여 도우미:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `db` | `fn db(&self) -> Ref<'_, ClientDatabase>` |
 | `db_mut` | `fn db_mut(&self) -> RefMut<'_, ClientDatabase>` |
 
-Common read helpers:
+공통 읽기 도우미:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `player_team_id` | `fn player_team_id(&self) -> usize` |
 | `player_team` | `fn player_team(&self) -> Option<Ref<'_, Team>>` |
@@ -542,17 +542,17 @@ Common read helpers:
 | `solo_rank_match_ids` | `fn solo_rank_match_ids(&self) -> Vec<usize>` |
 | `champion_info` | `fn champion_info(&self, champion_name: &str) -> Option<Arc<dyn ChampionInfo>>` |
 
-Client/server mod messaging:
+클라이언트/서버 모드 메시지:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `send_mod_command` | `fn send_mod_command(&self, mod_id: &str, command: &str, payload: impl Into<Vec<u8>>) -> bool` |
 | `mod_events` | `fn mod_events(&self, mod_id: &str) -> Vec<ModClientEvent>` |
 | `take_mod_events` | `fn take_mod_events(&self, mod_id: &str) -> Vec<ModClientEvent>` |
 
-Save-data helpers:
+저장 데이터 도우미:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `can_write_mod_save` | `fn can_write_mod_save(&self) -> bool` |
 | `mod_save_version` | `fn mod_save_version(&self, mod_id: &str) -> usize` |
@@ -568,7 +568,7 @@ Save-data helpers:
 
 ### `ClientDatabase`
 
-`ClientDatabase` is the broad client-side save/game snapshot. Public fields include:
+`ClientDatabase`는 광범위한 클라이언트 측 저장/게임 스냅샷입니다. 공개 필드는 다음을 포함합니다:
 
 ```rust
 pub scene: ClientScene,
@@ -604,7 +604,7 @@ pub champion_positions: HashMap<String, Vec<usize>>,
 pub head_to_head: HashMap<usize, (usize, usize)>,
 ```
 
-Common `ClientDatabase` helper methods mirror the `ClientData` read helpers, but return direct references instead of `Ref` guards:
+공통 `ClientDatabase` 도우미 메서드는 `ClientData` 읽기 도우미와 대응되지만, `Ref` 가드 대신 직접 참조를 반환합니다:
 
 - `player_team_id`, `try_player_team`, `team`, `team_ids`
 - `athlete`, `athlete_ids`, `athlete_current_region_id`, `athlete_has_visible_solo_rank_in_region`, `visible_solo_rank_athletes`
@@ -623,32 +623,32 @@ Common `ClientDatabase` helper methods mirror the `ClientData` read helpers, but
 - `team_salary_total`, `player_team`, `can_pause_save`, `is_player_vs_player_match`, `match_has_player_team`, `due_player_match`
 - `current_intl_break_target_date`, `version_at_date`, `get_historical_sheet`, `get_historical_game_setting`
 
-## Server Extension API
+## 서버 확장 API
 
 ### `ModServerExtension`
 
-Runs on the server/management side.
+서버/관리 측에서 실행됩니다.
 
-| Method | Signature | Default |
+| 메서드 | 시그니처 | 기본값 |
 | --- | --- | --- |
-| `on_server_start` | `fn on_server_start(&self, ctx: &mut ServerModContext)` | no-op |
-| `before_management_tick` | `fn before_management_tick(&self, ctx: &mut ServerModContext)` | no-op |
-| `after_management_tick` | `fn after_management_tick(&self, ctx: &mut ServerModContext)` | no-op |
-| `handle_command` | `fn handle_command(&self, ctx: &mut ServerModContext, command: &ModServerCommand) -> ModServerCommandResult` | `Pass` |
+| `on_server_start` | `fn on_server_start(&self, ctx: &mut ServerModContext)` | 동작 없음 |
+| `before_management_tick` | `fn before_management_tick(&self, ctx: &mut ServerModContext)` | 동작 없음 |
+| `after_management_tick` | `fn after_management_tick(&self, ctx: &mut ServerModContext)` | 동작 없음 |
+| `handle_command` | `fn handle_command(&self, ctx: &mut ServerModContext, command: &ModServerCommand) -> ModServerCommandResult` | `통과` |
 
 ### `ServerModContext`
 
-Fields:
+필드:
 
-| Field | Type |
+| 필드 | 형식 |
 | --- | --- |
 | `mod_id` | `&str` |
 | `database` | `&mut Database` |
 | `server_state` | `&mut ServerState` |
 
-Methods:
+메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `emit_event` | `fn emit_event(&mut self, event: impl Into<String>, payload: impl Into<Vec<u8>>) -> bool` |
 | `emit_event_to_player` | `fn emit_event_to_player(&mut self, player_id: PlayerId, event: impl Into<String>, payload: impl Into<Vec<u8>>) -> bool` |
@@ -657,19 +657,19 @@ Methods:
 | `player_team_id` | `fn player_team_id(&self, player_id: PlayerId) -> Option<usize>` |
 | `team_player_ids` | `fn team_player_ids(&self, team_id: usize) -> Vec<PlayerId>` |
 
-### Client/Server Message Types
+### 클라이언트/서버 메시지 유형
 
-`ModClientEvent` fields:
+`ModClientEvent` 필드:
 
-| Field | Type |
+| 필드 | 형식 |
 | --- | --- |
 | `mod_id` | `String` |
 | `event` | `String` |
 | `payload` | `Vec<u8>` |
 
-`ModClientEvent` constants and methods:
+`ModClientEvent` 상수 및 메서드:
 
-| Item | Signature |
+| 항목 | 시그니처 |
 | --- | --- |
 | `MAX_MOD_ID_LEN` | `usize = 128` |
 | `MAX_NAME_LEN` | `usize = 128` |
@@ -687,9 +687,9 @@ pub enum ModClientEventTarget {
 }
 ```
 
-`ModServerCommand` fields:
+`ModServerCommand` 필드:
 
-| Field | Type |
+| 필드 | 형식 |
 | --- | --- |
 | `mod_id` | `String` |
 | `command` | `String` |
@@ -697,9 +697,9 @@ pub enum ModClientEventTarget {
 | `sender_player_id` | `Option<PlayerId>` |
 | `sender_team_id` | `Option<usize>` |
 
-`ModServerCommand` methods:
+`ModServerCommand` 메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `new` | `fn new(mod_id: impl Into<String>, command: impl Into<String>, payload: impl Into<Vec<u8>>, sender_player_id: Option<PlayerId>, sender_team_id: Option<usize>) -> Option<Self>` |
 | `is_valid` | `fn is_valid(&self) -> bool` |
@@ -713,21 +713,21 @@ pub enum ModServerCommandResult {
 }
 ```
 
-## Mod Save Data
+## Mod 저장 데이터
 
-`ModSaveData` stores per-save bytes owned by mod id namespaces.
+`ModSaveData`는 mod id 네임스페이스가 소유한 세이브별 바이트를 저장합니다.
 
-Limits:
+제한:
 
-| Constant | Value |
+| 상수 | 값 |
 | --- | --- |
 | `MAX_ID_LEN` | `128` |
 | `MAX_KEY_LEN` | `128` |
 | `MAX_VALUE_LEN` | `1024 * 1024` |
 
-`ModSaveData` methods:
+`ModSaveData` 메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `namespace_count` | `fn namespace_count(&self) -> usize` |
 | `namespace_ids` | `fn namespace_ids(&self) -> Vec<String>` |
@@ -744,20 +744,20 @@ Limits:
 | `remove_key` | `fn remove_key(&mut self, mod_id: &str, key: &str) -> bool` |
 | `clear_namespace` | `fn clear_namespace(&mut self, mod_id: &str) -> bool` |
 
-`ModSaveNamespace` methods:
+`ModSaveNamespace` 메서드:
 
-| Method | Signature |
+| 메서드 | 시그니처 |
 | --- | --- |
 | `save_version` | `fn save_version(&self) -> usize` |
 | `keys` | `fn keys(&self) -> Vec<String>` |
 
-When called through `ClientData`, the helper also queues the matching save mutation packet for the server when writes are allowed.
+`ClientData`를 통해 호출하면, 쓰기가 허용될 때 이 도우미는 서버용으로 일치하는 세이브 변경 패킷도 대기열에 추가합니다.
 
-## Core Value Types
+## 핵심 값 형식
 
-### Data and Settings Types
+### 데이터 및 설정 형식
 
-These are re-exported directly from `game-core`:
+이는 `game-core`에서 직접 다시 내보낸 것입니다:
 
 - `Athlete`
 - `Team`
@@ -784,9 +784,9 @@ These are re-exported directly from `game-core`:
 - `ScoutDispatchInfo`
 - `RecruitDoneAthlete`
 
-### Simulation and Content Types
+### 시뮬레이션 및 콘텐츠 유형
 
-Also re-exported from `game-core`:
+또한 `game-core`에서 다시 내보냄:
 
 - `EntityStat`
 - `ChampionCategory`
@@ -805,7 +805,7 @@ Also re-exported from `game-core`:
 - `BuffType`
 - `CCState`
 
-Common field and variant reference:
+공통 필드 및 변형 참조:
 
 ```rust
 pub struct EntityStat {
@@ -859,25 +859,25 @@ pub enum ItemTag {
     Defense,
     MagicResistance,
     HP,
-    DefensePenetration,
-    Vamp,
-    HealReduce,
-    ShieldBreak,
+    DefensePenetration, //방어구관통
+    Vamp, //흡혈
+    HealReduce, //치유감소
+    ShieldBreak, //보호막파괴
     MoveSpeed,
     AttackRange,
     Shield,
     HpPercentDamage,
-    ASDebuff,
-    ReflectDamage,
-    Toughness,
-    MRDebuff,
+    ASDebuff, //공격속도감소
+    ReflectDamage, //피해반사
+    Toughness, //강인함
+    MRDebuff, //마법저항감소
     RangeDamage,
     MRPenetration,
     CooltimeReduce,
     DotDamage,
     HPRegen,
     MyHpPercentDamage,
-    ShareDamage,
+    ShareDamage, //피해분담
     Range,
 }
 
@@ -913,20 +913,20 @@ pub enum CastingType {
 }
 
 pub enum CastingTarget {
-    Ally,
-    AllyChampion,
-    AllyChampionInCC,
-    AllyNotSelf,
-    AllyOnlySelf,
-    Enemy,
-    EnemyWithoutTower,
-    EnemyChampion,
-    EnemyChampionInCC,
-    EnemyChampionRecentlyAttacked,
-    Both,
-    BothWithoutTower,
-    BothChampion,
-    None,
+    Ally, //아군
+    AllyChampion, //아군영웅
+    AllyChampionInCC, //군중제어상태의아군영웅
+    AllyNotSelf, //자신이아닌아군
+    AllyOnlySelf, //자신만
+    Enemy, //적군
+    EnemyWithoutTower, //포탑제외적군
+    EnemyChampion, //적군영웅
+    EnemyChampionInCC, //군중제어상태의적군영웅
+    EnemyChampionRecentlyAttacked, //최근공격한적군영웅
+    Both, //모두
+    BothWithoutTower, //포탑제외모두
+    BothChampion, //양측영웅
+    None, //없음
 }
 
 pub enum Position {
@@ -954,27 +954,27 @@ pub enum InputTarget {
 }
 
 pub enum BuffType {
-    Permanent,
+    Permanent, //영구
     Time { tick: usize },
-    WithShield,
+    WithShield, //방패 장착
 }
 
 pub enum CCState {
-    Airborne { tick: u64 },
-    Stun { tick: u64 },
-    Bind { tick: u64 },
-    BlockAttack { tick: usize },
-    BlockSkill { tick: usize },
-    BlockMoveSkill { tick: usize },
-    ForceMove { tick: u64, dx: i64, dy: i64, speed: u64 },
-    Taunt { tick: u64, target: usize },
-    Fear { tick: u64, dx: i64, dy: i64 },
-    Charm { tick: u64, dx: i64, dy: i64 },
-    Animation { name: String, tick: u64 },
+    Airborne { tick: u64 }, //공중에 뜸
+    Stun { tick: u64 }, //기절
+    Bind { tick: u64 }, //속박
+    BlockAttack { tick: usize }, //공격 차단
+    BlockSkill { tick: usize }, //기술 차단
+    BlockMoveSkill { tick: usize }, //이동 기술 차단
+    ForceMove { tick: u64, dx: i64, dy: i64, speed: u64 }, //강제 이동
+    Taunt { tick: u64, target: usize }, //도발
+    Fear { tick: u64, dx: i64, dy: i64 }, //공포
+    Charm { tick: u64, dx: i64, dy: i64 }, //매혹
+    Animation { name: String, tick: u64 }, //동작
 }
 ```
 
-`BuffState` fields:
+`BuffState` 필드:
 
 ```rust
 pub struct BuffState {
@@ -1018,9 +1018,9 @@ pub struct BuffState {
 }
 ```
 
-Common helper methods on these primitive types:
+이러한 기본 형식에 대한 공통 도우미 메서드:
 
-| Type | Methods |
+| 형식 | 메서드 |
 | --- | --- |
 | `EntityStat` | `zero() -> Self`, `add_stat(&mut self, added: EntityStat)` |
 | `ChampionCategory` | `to_text_key(&self) -> String` |
@@ -1035,11 +1035,11 @@ Common helper methods on these primitive types:
 | `BuffState` | `merge(&mut self, other: &BuffState)`, `apply(&self, stat: EntityStat) -> EntityStat` |
 | `CCState` | `block_move(&self) -> bool`, `block_input(&self) -> bool`, `is_cc(&self) -> bool`, `tick(&self) -> u64` |
 
-Some helper methods mention internal game types such as `Entity`, `Projectile`, `GameRule`, or `LineType`. They are listed because they are inherent methods on exported primitives in the matching SDK, but normal native mods should usually prefer the safe `GameCtx`/`EntityRef` wrappers unless they already have those internal values through another exported object.
+일부 헬퍼 메서드는 `Entity`, `Projectile`, `GameRule`, `LineType`와 같은 내부 게임 형식을 언급합니다. 이들은 대응하는 SDK에서 내보낸 기본형에 본래 속한 메서드이기 때문에 여기에 나열되어 있지만, 일반적인 네이티브 모드는 보통 다른 내보낸 객체를 통해 이러한 내부 값을 이미 가지고 있는 경우가 아니라면 안전한 `GameCtx`/`EntityRef` 래퍼를 우선 사용하는 것이 좋습니다.
 
-### AI, Messaging, and Save Types
+### AI, 메시징 및 저장 형식
 
-These are also exported from `game-core` and documented above:
+이들 또한 `game-core`에서 내보내지며 위에 문서화되어 있습니다:
 
 - `DraftScoreContext`
 - `DraftScoreDecision`
@@ -1055,18 +1055,18 @@ These are also exported from `game-core` and documented above:
 - `ModSaveData`
 - `ModSaveNamespace`
 
-## Low-Level ABI Types
+## 저수준 ABI 형식
 
-These structs are public because the loader and SDK need an ABI boundary. Normal mods should prefer the safe wrappers on `GameCtx`, `EntityRef`, `PlayerRef`, and `ProjectileRef`.
+이 구조체들은 로더와 SDK에 ABI 경계가 필요하기 때문에 공개되어 있습니다. 일반적인 모드는 `GameCtx`, `EntityRef`, `PlayerRef`, `ProjectileRef`의 안전한 래퍼를 우선 사용하는 것이 좋습니다.
 
 - `SimulationVtable`
 - `FrameVtable`
 - `ModServiceVtable`
 
-`FrameVtable` also contains a low-level `debug_text` function pointer. There is no safe `GameCtx::debug_text` wrapper in API version `(0, 7)`.
+`FrameVtable`에는 저수준 `debug_text` 함수 포인터도 포함되어 있습니다. API 버전 `(0, 7)`에는 안전한 `GameCtx::debug_text` 래퍼가 없습니다.
 
-## Related Guides
+## 관련 가이드
 
-- [Native Rust Mods](native-rust-mods.md)
-- [Native AI Hooks](native-ai-hooks.md)
-- [Mod Save Data](mod-save-data.md)
+- [네이티브 Rust 모드](native-rust-mods.md)
+- [네이티브 AI 훅](native-ai-hooks.md)
+- [모드 저장 데이터](mod-save-data.md)
